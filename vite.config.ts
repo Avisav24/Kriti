@@ -30,13 +30,13 @@ export default defineConfig(({ mode }) => {
               req.on('end', async () => {
                 try {
                   const data = JSON.parse(body);
-                  const RESEND_API_KEY = env.RESEND_API_KEY;
-                  const TO_EMAIL = env.TO_EMAIL || 'abhinav.is.av@gmail.com';
+                  const TELEGRAM_BOT_TOKEN = env.TELEGRAM_BOT_TOKEN || '8806714140:AAE5RC6qQDKyMulxKz6JLUjgyM5DDcXr3FI';
+                  const TELEGRAM_CHAT_ID = env.TELEGRAM_CHAT_ID || '6541727849';
                   
-                  if (!RESEND_API_KEY) {
+                  if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
                     res.statusCode = 503;
                     res.setHeader('Content-Type', 'application/json');
-                    res.end(JSON.stringify({ error: "The email service isn't set up yet" }));
+                    res.end(JSON.stringify({ error: "The messaging service isn't set up yet." }));
                     return;
                   }
                   
@@ -47,37 +47,26 @@ export default defineConfig(({ mode }) => {
                       })
                     : new Date().toLocaleString('en-IN');
                     
-                  const emailResponse = await fetch('https://api.resend.com/emails', {
+                  const telegramMessage = `💌 *New journal entry from Kriti*\n_Sent ${timestamp}_\n\n${data.message}`;
+                    
+                  const telegramResponse = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: {
-                      Authorization: `Bearer ${RESEND_API_KEY}`,
                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                      from: 'Kriti <onboarding@resend.dev>',
-                      to: [TO_EMAIL],
-                      subject: `💌 New journal entry from Kriti — ${timestamp}`,
-                      html: `
-                        <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; padding: 32px; background: #FAFAF8; border-radius: 12px;">
-                          <h2 style="font-size: 20px; color: #171412; margin-bottom: 8px;">New Journal Entry</h2>
-                          <p style="font-size: 13px; color: #6F6A66; margin-bottom: 24px;">${timestamp}</p>
-                          <div style="font-size: 16px; color: #171412; line-height: 1.8; white-space: pre-wrap; padding: 24px; background: white; border: 1px solid #E7E4E1; border-radius: 8px;">
-                            ${data.message.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
-                          </div>
-                          <p style="font-size: 12px; color: #6F6A66; margin-top: 24px; text-align: center;">
-                            Sent from Kriti's Little Place 💗
-                          </p>
-                        </div>
-                      `,
+                      chat_id: TELEGRAM_CHAT_ID,
+                      text: telegramMessage,
+                      parse_mode: 'Markdown'
                     }),
                   });
                   
-                  if (!emailResponse.ok) {
-                    const errorText = await emailResponse.text();
-                    console.error('Resend API error:', errorText);
+                  if (!telegramResponse.ok) {
+                    const errorText = await telegramResponse.text();
+                    console.error('Telegram API error:', errorText);
                     res.statusCode = 502;
                     res.setHeader('Content-Type', 'application/json');
-                    res.end(JSON.stringify({ error: "Didn't send — the email service had a hiccup." }));
+                    res.end(JSON.stringify({ error: "Didn't send. Telegram service had a hiccup." }));
                     return;
                   }
                   

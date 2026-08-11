@@ -1,7 +1,7 @@
 /* ==========================================================
- KOKO Journal Email API Route
+ KOKO Journal Telegram API Route
  Vercel Edge Function / Serverless Function
- POST /api/messages → sends via Resend
+ POST /api/messages → sends via Telegram Bot
  ========================================================== */
 
 // For Vercel deployment, this file lives at api/messages.ts
@@ -38,14 +38,14 @@ export default async function handler(req: Request): Promise<Response> {
  );
  }
 
- const RESEND_API_KEY = process.env.RESEND_API_KEY;
- const TO_EMAIL = process.env.TO_EMAIL || 'abhinav.is.av@gmail.com';
+ const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '8806714140:AAE5RC6qQDKyMulxKz6JLUjgyM5DDcXr3FI';
+ const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || '6541727849';
 
- if (!RESEND_API_KEY) {
- console.error('RESEND_API_KEY is not configured');
+ if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+ console.error('Telegram config is missing');
  return new Response(
  JSON.stringify({
- error: "The email service isn't set up yet your message is saved locally. Try again later, or text me directly.",
+ error: "The messaging service isn't set up yet. Your message is saved locally. Try again later, or text me directly.",
  }),
  { status: 503, headers: { 'Content-Type': 'application/json' } }
  );
@@ -58,37 +58,29 @@ export default async function handler(req: Request): Promise<Response> {
  })
  : new Date().toLocaleString('en-IN');
 
- const emailResponse = await fetch('https://api.resend.com/emails', {
+ const telegramMessage = `💌 *New journal entry from Kriti*
+_Sent ${timestamp}_
+
+${body.message}`;
+
+ const telegramResponse = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
  method: 'POST',
  headers: {
- Authorization: `Bearer ${RESEND_API_KEY}`,
  'Content-Type': 'application/json',
  },
  body: JSON.stringify({
- from: 'Kriti <onboarding@resend.dev>',
- to: [TO_EMAIL],
- subject: ` New journal entry from Kriti ${timestamp}`,
- html: `
- <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; padding: 32px; background: #FAFAF8; border-radius: 12px;">
- <h2 style="font-size: 20px; color: #171412; margin-bottom: 8px;">New Journal Entry</h2>
- <p style="font-size: 13px; color: #6F6A66; margin-bottom: 24px;">${timestamp}</p>
- <div style="font-size: 16px; color: #171412; line-height: 1.8; white-space: pre-wrap; padding: 24px; background: white; border: 1px solid #E7E4E1; border-radius: 8px;">
-${body.message.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
- </div>
- <p style="font-size: 12px; color: #6F6A66; margin-top: 24px; text-align: center;">
- Sent from Kriti's Little Place 
- </p>
- </div>
- `,
+ chat_id: TELEGRAM_CHAT_ID,
+ text: telegramMessage,
+ parse_mode: 'Markdown'
  }),
  });
 
- if (!emailResponse.ok) {
- const errorText = await emailResponse.text();
- console.error('Resend API error:', errorText);
+ if (!telegramResponse.ok) {
+ const errorText = await telegramResponse.text();
+ console.error('Telegram API error:', errorText);
  return new Response(
  JSON.stringify({
- error: "Didn't send the email service had a hiccup. Your message is saved locally, so try again in a moment.",
+ error: "Didn't send. Telegram service had a hiccup. Your message is saved locally, so try again in a moment.",
  }),
  { status: 502, headers: { 'Content-Type': 'application/json' } }
  );
@@ -102,7 +94,7 @@ ${body.message.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
  console.error('Journal API error:', err);
  return new Response(
  JSON.stringify({
- error: "Something went wrong your message is saved locally. Try again, or text me directly if it keeps failing.",
+ error: "Something went wrong. Your message is saved locally. Try again, or text me directly if it keeps failing.",
  }),
  { status: 500, headers: { 'Content-Type': 'application/json' } }
  );
