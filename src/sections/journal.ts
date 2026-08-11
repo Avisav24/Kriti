@@ -76,7 +76,10 @@ export function renderJournal(): HTMLElement {
  headers: { 'Content-Type': 'application/json' },
  body: JSON.stringify({
  message,
- timestamp: new Date().toISOString(),
+ timestamp: new Date().toLocaleString('en-IN', {
+ dateStyle: 'medium',
+ timeStyle: 'short'
+ }),
  }),
  });
 

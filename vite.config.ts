@@ -40,12 +40,7 @@ export default defineConfig(({ mode }) => {
                     return;
                   }
                   
-                  const timestamp = data.timestamp
-                    ? new Date(data.timestamp).toLocaleString('en-IN', {
-                        dateStyle: 'medium',
-                        timeStyle: 'short'
-                      })
-                    : new Date().toLocaleString('en-IN');
+                  const timestamp = data.timestamp || 'Unknown Time';
                     
                   const telegramMessage = `💌 *New journal entry from Kriti*\n_Sent ${timestamp}_\n\n${data.message}`;
                     

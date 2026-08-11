@@ -51,12 +51,7 @@ export default async function handler(req: Request): Promise<Response> {
  );
  }
 
- const timestamp = body.timestamp
- ? new Date(body.timestamp).toLocaleString('en-IN', {
- dateStyle: 'medium',
- timeStyle: 'short'
- })
- : new Date().toLocaleString('en-IN');
+ const timestamp = body.timestamp || 'Unknown Time';
 
  const telegramMessage = `💌 *New journal entry from Kriti*
 _Sent ${timestamp}_
