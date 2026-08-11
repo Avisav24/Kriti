@@ -40,22 +40,39 @@ export function renderNeedMe(): HTMLElement {
  </div>
  `;
 
- // Toggle logic plain DOM state
- section.querySelectorAll('.need-me-toggle').forEach((toggle) => {
- toggle.addEventListener('click', () => {
- const isActive = toggle.classList.contains('active');
+  // Toggle logic plain DOM state
+  section.querySelectorAll('.need-me-toggle').forEach((toggle) => {
+    toggle.addEventListener('click', async () => {
+      const isActive = toggle.classList.contains('active');
 
- // Close all others
- section.querySelectorAll('.need-me-toggle.active').forEach((t) => {
- t.classList.remove('active');
- });
+      // Close all others
+      section.querySelectorAll('.need-me-toggle.active').forEach((t) => {
+        t.classList.remove('active');
+      });
 
- // Toggle current
- if (!isActive) {
- toggle.classList.add('active');
- }
- });
- });
+      // Toggle current
+      if (!isActive) {
+        toggle.classList.add('active');
 
- return section;
+        // Send a message to Telegram
+        const label = toggle.querySelector('.need-me-toggle-label')?.textContent;
+        if (label) {
+          try {
+            await fetch('/api/messages', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                message: `*Need Me Alert:* Kriti tapped "${label}"`,
+                timestamp: new Date().toISOString()
+              })
+            });
+          } catch (err) {
+            console.error('Failed to notify via Telegram', err);
+          }
+        }
+      }
+    });
+  });
+
+  return section;
 }
