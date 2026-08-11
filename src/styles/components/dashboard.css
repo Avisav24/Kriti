@@ -8,7 +8,7 @@
 
 .dashboard-grid {
  display: grid;
- grid-template-columns: repeat(12, 1fr);
+ grid-template-columns: 1fr;
  gap: var(--space-xl);
  margin-top: var(--space-2xl);
 }
@@ -17,7 +17,6 @@
  padding: var(--space-2xl);
  text-align: center;
  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
- grid-column: span 12;
 }
 
 .dashboard-card:hover {
@@ -46,6 +45,9 @@
 }
 
 @media (min-width: 640px) {
+ .dashboard-grid {
+   grid-template-columns: repeat(12, 1fr);
+ }
  .dashboard-card {
    grid-column: span 6;
  }
