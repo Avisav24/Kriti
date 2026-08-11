@@ -40,7 +40,24 @@ export default defineConfig(({ mode }) => {
                     return;
                   }
                   
-                  const timestamp = data.timestamp || 'Unknown Time';
+                  let timestamp = data.timestamp || 'Unknown Time';
+                  if (timestamp.includes('T') && timestamp.endsWith('Z')) {
+                    const d = new Date(timestamp);
+                    if (!isNaN(d.getTime())) {
+                      d.setMinutes(d.getMinutes() + 330);
+                      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                      const day = d.getUTCDate();
+                      const month = months[d.getUTCMonth()];
+                      const year = d.getUTCFullYear();
+                      let hours = d.getUTCHours();
+                      const minutes = d.getUTCMinutes();
+                      const ampm = hours >= 12 ? 'pm' : 'am';
+                      hours = hours % 12;
+                      hours = hours ? hours : 12; 
+                      const minStr = minutes < 10 ? '0' + minutes : minutes;
+                      timestamp = `${day} ${month} ${year}, ${hours}:${minStr} ${ampm}`;
+                    }
+                  }
                     
                   const telegramMessage = `💌 *New journal entry from Kriti*\n_Sent ${timestamp}_\n\n${data.message}`;
                     

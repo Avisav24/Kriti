@@ -51,7 +51,24 @@ export default async function handler(req: Request): Promise<Response> {
  );
  }
 
- const timestamp = body.timestamp || 'Unknown Time';
+ let timestamp = body.timestamp || 'Unknown Time';
+ if (timestamp.includes('T') && timestamp.endsWith('Z')) {
+ const d = new Date(timestamp);
+ if (!isNaN(d.getTime())) {
+ d.setMinutes(d.getMinutes() + 330);
+ const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+ const day = d.getUTCDate();
+ const month = months[d.getUTCMonth()];
+ const year = d.getUTCFullYear();
+ let hours = d.getUTCHours();
+ const minutes = d.getUTCMinutes();
+ const ampm = hours >= 12 ? 'pm' : 'am';
+ hours = hours % 12;
+ hours = hours ? hours : 12; 
+ const minStr = minutes < 10 ? '0' + minutes : minutes;
+ timestamp = `${day} ${month} ${year}, ${hours}:${minStr} ${ampm}`;
+ }
+ }
 
  const telegramMessage = `💌 *New journal entry from Kriti*
 _Sent ${timestamp}_
