@@ -31,7 +31,7 @@ export default defineConfig(({ mode }) => {
                 try {
                   const data = JSON.parse(body);
                   const RESEND_API_KEY = env.RESEND_API_KEY;
-                  const TO_EMAIL = env.TO_EMAIL || 'delivered@resend.dev';
+                  const TO_EMAIL = env.TO_EMAIL || 'abhinav.is.av@gmail.com';
                   
                   if (!RESEND_API_KEY) {
                     res.statusCode = 503;
