@@ -43,10 +43,9 @@ export default defineConfig(({ mode }) => {
                   const timestamp = data.timestamp
                     ? new Date(data.timestamp).toLocaleString('en-IN', {
                         dateStyle: 'medium',
-                        timeStyle: 'short',
-                        timeZone: 'Asia/Kolkata',
+                        timeStyle: 'short'
                       })
-                    : new Date().toLocaleString();
+                    : new Date().toLocaleString('en-IN');
                     
                   const emailResponse = await fetch('https://api.resend.com/emails', {
                     method: 'POST',

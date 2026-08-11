@@ -95,13 +95,12 @@ export function renderJournal(): HTMLElement {
  Sent! Your words are on their way to me. Thank you for sharing what you're feeling.
  </div>
  `;
- } catch (err) {
- // Specific error message per §0.4
+ } catch (err: any) {
+ const errorMessage = err.message || "Something went wrong";
  statusDiv.innerHTML = `
  <div class="journal-status journal-status-error">
- <strong>Didn't send but your words are safe.</strong>
- Your message is still saved here. Try sending again in a moment, or come back later 
- it'll still be here waiting. If it keeps failing, you can always text me directly. 
+ <strong>Didn't send but your words are safe.</strong><br/>
+ ${errorMessage}
  </div>
  `;
  } finally {

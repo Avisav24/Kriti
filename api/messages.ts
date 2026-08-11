@@ -54,10 +54,9 @@ export default async function handler(req: Request): Promise<Response> {
  const timestamp = body.timestamp
  ? new Date(body.timestamp).toLocaleString('en-IN', {
  dateStyle: 'medium',
- timeStyle: 'short',
- timeZone: 'Asia/Kolkata',
+ timeStyle: 'short'
  })
- : new Date().toLocaleString();
+ : new Date().toLocaleString('en-IN');
 
  const emailResponse = await fetch('https://api.resend.com/emails', {
  method: 'POST',
