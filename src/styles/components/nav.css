@@ -13,15 +13,29 @@
  display: flex;
  align-items: center;
  justify-content: space-between;
- transition: background var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
+ transition: border-color var(--transition-base), box-shadow var(--transition-base);
  background: transparent;
  border-bottom: 1px solid transparent;
 }
 
-.nav.scrolled {
+/* Use a pseudo-element for the blur to prevent trapping .nav-drawer (which is fixed) */
+.nav::before {
+ content: '';
+ position: absolute;
+ inset: 0;
+ z-index: -1;
+ background: transparent;
+ transition: background var(--transition-base);
+ pointer-events: none;
+}
+
+.nav.scrolled::before {
  background: rgba(250, 250, 248, 0.85);
  backdrop-filter: blur(12px);
  -webkit-backdrop-filter: blur(12px);
+}
+
+.nav.scrolled {
  border-bottom-color: var(--border);
  box-shadow: var(--shadow-sm);
 }
