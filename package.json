@@ -1,0 +1,17 @@
+{
+  "name": "koko",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Kriti's Little Place — a private love letter PWA",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "terser": "^5.49.2",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
+  }
+}

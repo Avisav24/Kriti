@@ -1,0 +1,137 @@
+/* ==========================================================
+ Open When Letters
+ ========================================================== */
+
+.letters-grid {
+ display: grid;
+ grid-template-columns: 1fr;
+ gap: var(--space-lg);
+}
+
+.letter-card {
+ padding: var(--space-xl) var(--space-lg);
+ cursor: pointer;
+ transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+ background: rgba(23, 20, 18, 0.85);
+ border: 1px solid rgba(255, 255, 255, 0.1);
+ border-left: 4px solid var(--accent-pink);
+}
+
+.letter-card:hover {
+ transform: translateY(-2px);
+ box-shadow: var(--shadow-md);
+ background: rgba(23, 20, 18, 0.95);
+}
+
+.letter-card:nth-child(2) { border-left-color: var(--accent-gold); }
+.letter-card:nth-child(3) { border-left-color: var(--accent-lavender); }
+.letter-card:nth-child(4) { border-left-color: var(--accent-rose); }
+.letter-card:nth-child(5) { border-left-color: var(--accent-gold-2); }
+.letter-card:nth-child(6) { border-left-color: var(--accent-warm-muted); }
+.letter-card:nth-child(7) { border-left-color: var(--accent-pink); }
+.letter-card:nth-child(8) { border-left-color: var(--accent-gold); }
+.letter-card:nth-child(9) { border-left-color: var(--accent-lavender); }
+.letter-card:nth-child(10) { border-left-color: var(--accent-rose); }
+
+.letter-card-label {
+ font-family: var(--font-handwritten);
+ font-size: 1.125rem;
+ color: var(--structural-white);
+ margin-bottom: var(--space-xs);
+}
+
+.letter-card-hint {
+ font-family: var(--font-body);
+ font-size: 0.8125rem;
+ color: rgba(255, 255, 255, 0.7);
+}
+
+/* Letter Modal */
+.letter-modal {
+ width: 90vw;
+ max-width: 600px;
+ max-height: 85vh;
+ border-radius: var(--radius-lg);
+ background: var(--canvas);
+ overflow: hidden;
+ display: flex;
+ flex-direction: column;
+}
+
+.letter-modal-header {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ padding: var(--space-lg) var(--space-xl);
+ border-bottom: 1px solid var(--border);
+}
+
+.letter-modal-title {
+ font-family: var(--font-handwritten);
+ font-size: 1.375rem;
+ color: var(--ink);
+}
+
+.letter-modal-close {
+ width: 36px;
+ height: 36px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ color: var(--body-text);
+ cursor: pointer;
+ transition: color var(--transition-fast);
+}
+
+.letter-modal-close:hover {
+ color: var(--ink);
+}
+
+.letter-modal-body {
+ padding: var(--space-xl);
+ overflow-y: auto;
+ flex: 1;
+ position: relative;
+}
+
+/* Paper-line decorative background */
+.letter-modal-body::before {
+ content: '';
+ position: absolute;
+ top: 0;
+ left: var(--space-xl);
+ right: var(--space-xl);
+ bottom: 0;
+ background-image: repeating-linear-gradient(
+ transparent,
+ transparent 31px,
+ var(--border) 31px,
+ var(--border) 32px
+ );
+ opacity: 0.4;
+ pointer-events: none;
+}
+
+.letter-modal-text {
+ font-family: var(--font-emotional);
+ font-size: 1.0625rem;
+ color: var(--ink);
+ line-height: 2;
+ position: relative;
+ white-space: pre-wrap;
+}
+
+.letter-modal-date {
+ font-family: var(--font-body);
+ font-size: 0.75rem;
+ color: var(--body-text);
+ text-align: right;
+ margin-top: var(--space-xl);
+ position: relative;
+}
+
+@media (min-width: 640px) {
+ .letters-grid {
+ grid-template-columns: repeat(2, 1fr);
+ }
+}

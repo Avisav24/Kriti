@@ -1,0 +1,113 @@
+/* ==========================================================
+ * Love Reasons Deck
+ * ========================================================== */
+
+.love-reasons-section {
+  background: #E91E63;
+  color: var(--structural-white);
+  width: 100%;
+}
+
+.love-reasons-section .section-title,
+.love-reasons-section .love-reasons-quote,
+.love-reasons-section .section-eyebrow {
+  color: var(--structural-white);
+}
+
+.love-reasons-section .section-description,
+.love-reasons-section .love-reasons-number {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.love-reasons-section .surface-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.love-reasons-section .love-reasons-dot {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.love-reasons-section .love-reasons-dot.seen,
+.love-reasons-section .love-reasons-dot.active {
+  background: var(--structural-white);
+}
+
+.love-reasons-section .btn-primary {
+  background: var(--structural-white);
+  color: #E91E63;
+}
+
+.love-reasons-container {
+ max-width: 600px;
+ margin: 0 auto;
+ text-align: center;
+}
+
+.love-reasons-card {
+ padding: var(--space-3xl) var(--space-2xl);
+ min-height: 240px;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ margin-bottom: var(--space-xl);
+ position: relative;
+ overflow: hidden;
+}
+
+.love-reasons-number {
+ font-family: var(--font-body);
+ font-size: 0.75rem;
+ font-weight: 600;
+ color: var(--accent-pink);
+ text-transform: uppercase;
+ letter-spacing: 0.1em;
+ margin-bottom: var(--space-md);
+}
+
+.love-reasons-quote {
+ font-family: var(--font-emotional);
+ font-size: clamp(1.125rem, 3vw, 1.375rem);
+ color: var(--ink);
+ line-height: 1.7;
+ max-width: 28rem;
+ transition: opacity 0.3s ease;
+}
+
+.love-reasons-cta {
+ margin-top: var(--space-xl);
+}
+
+/* Dot indicators */
+.love-reasons-dots {
+ display: flex;
+ justify-content: center;
+ gap: var(--space-sm);
+ margin-top: var(--space-xl);
+ flex-wrap: wrap;
+}
+
+.love-reasons-dot {
+ width: 8px;
+ height: 8px;
+ border-radius: 50%;
+ background: var(--border);
+ transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.love-reasons-dot.seen {
+ background: var(--accent-pink);
+ opacity: 0.5;
+}
+
+.love-reasons-dot.active {
+ background: var(--accent-pink);
+ opacity: 1;
+ transform: scale(1.3);
+}
+
+/* Card transition */
+.love-reasons-card.transitioning .love-reasons-quote {
+ opacity: 0;
+}

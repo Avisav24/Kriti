@@ -1,0 +1,90 @@
+/* ==========================================================
+ PWA Install Prompt (Compact Pill)
+ ========================================================== */
+
+.pwa-prompt {
+ position: fixed;
+ bottom: var(--space-xl);
+ left: 50%;
+ transform: translateX(-50%);
+ z-index: 160;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ width: calc(100% - var(--space-xl) * 2);
+ max-width: 400px;
+ padding: var(--space-sm) var(--space-md);
+ background: var(--structural-white);
+ border: 1px solid var(--border);
+ border-radius: var(--radius-full); /* Make it a pill */
+ box-shadow: var(--shadow-xl);
+ animation: fadeRise 0.6s ease-out;
+}
+
+.pwa-prompt-content {
+ display: flex;
+ flex-direction: column;
+ min-width: 0;
+ flex: 1;
+ padding-right: var(--space-sm);
+}
+
+.pwa-prompt-title {
+ font-family: var(--font-body);
+ font-weight: 600;
+ font-size: 0.875rem;
+ color: var(--ink);
+ white-space: nowrap;
+ overflow: hidden;
+ text-overflow: ellipsis;
+}
+
+.pwa-prompt-description {
+ display: none; /* Hide description to maintain small pill shape */
+}
+
+.pwa-prompt-actions {
+ display: flex;
+ align-items: center;
+ gap: var(--space-sm);
+ flex-shrink: 0;
+}
+
+.pwa-prompt-install {
+ padding: 0.4rem 1rem;
+ font-size: 0.75rem;
+ border-radius: var(--radius-full);
+}
+
+.pwa-prompt-dismiss {
+ width: 28px;
+ height: 28px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ color: var(--body-text);
+ cursor: pointer;
+ background: transparent;
+ border: none;
+ padding: 0;
+}
+
+.pwa-prompt-dismiss svg {
+ width: 16px;
+ height: 16px;
+}
+
+.pwa-prompt-dismiss:hover {
+ color: var(--ink);
+}
+
+.pwa-prompt-exit {
+ animation: fadeOut 0.3s ease-out forwards;
+}
+
+/* Adjust position to not overlap music player on very small screens */
+@media (max-width: 768px) {
+ .pwa-prompt {
+   bottom: calc(var(--space-md) + 64px); /* Float above the music pill */
+ }
+}

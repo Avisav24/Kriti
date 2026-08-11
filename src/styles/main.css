@@ -1,0 +1,126 @@
+/* ==========================================================
+ KOKO Main CSS Entry Point
+ ========================================================== */
+
+/* Foundation */
+@import './fonts.css';
+@import './theme.css';
+
+/* Components */
+@import './components/gate.css';
+@import './components/landing.css';
+@import './components/nav.css';
+@import './components/dashboard.css';
+@import './components/comfort-videos.css';
+@import './components/open-when.css';
+@import './components/need-me.css';
+@import './components/journal.css';
+@import './components/love-reasons.css';
+@import './components/footer.css';
+@import './components/music-player.css';
+@import './components/pwa-prompt.css';
+
+/* ---- Reset ---- */
+*,
+*::before,
+*::after {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+}
+
+html {
+ scroll-behavior: smooth;
+ -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+ html { scroll-behavior: auto; }
+}
+
+body {
+ font-family: var(--font-body);
+ font-size: 16px;
+ line-height: 1.6;
+ color: var(--ink);
+ background-color: transparent;
+ -webkit-font-smoothing: antialiased;
+ -moz-osx-font-smoothing: grayscale;
+ overflow-x: hidden;
+}
+
+#ambient-background {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+}
+
+.bg-video, .bg-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(250, 250, 248, 0.35); /* Made even more transparent for video visibility */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+img, video {
+ max-width: 100%;
+ display: block;
+}
+
+a {
+ color: inherit;
+ text-decoration: none;
+}
+
+button {
+ font: inherit;
+ cursor: pointer;
+ border: none;
+ background: none;
+ color: inherit;
+}
+
+ul, ol {
+ list-style: none;
+}
+
+/* Native dialog reset */
+dialog {
+  border: none;
+  padding: 0;
+  background: transparent;
+  max-width: none;
+  max-height: none;
+  margin: auto;
+}
+
+dialog::backdrop {
+ background: rgba(23, 20, 18, 0.6);
+ backdrop-filter: blur(4px);
+ -webkit-backdrop-filter: blur(4px);
+}
+
+dialog[open] {
+ animation: scaleIn 0.3s ease-out;
+}
+
+/* Visually hidden (accessible) */
+.sr-only {
+ position: absolute;
+ width: 1px;
+ height: 1px;
+ padding: 0;
+ margin: -1px;
+ overflow: hidden;
+ clip: rect(0, 0, 0, 0);
+ white-space: nowrap;
+ border-width: 0;
+}

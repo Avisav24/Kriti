@@ -1,0 +1,299 @@
+/* ==========================================================
+ KOKO Design Tokens, Keyframes & Utility Classes
+ ========================================================== */
+
+/* ---- Color Tokens ---- */
+:root {
+ --canvas: #FAFAF8;
+ --ink: #171412;
+ --body-text: #6F6A66;
+ --border: #E7E4E1;
+ --surface: #F4F1ED;
+ --surface-gradient-start: #faf7f2;
+ --surface-gradient-end: #f4f1ed;
+
+ --structural-black: #171412;
+ --structural-white: #FFFFFF;
+
+ --accent-pink: #E092A2;
+ --accent-gold: #D4956A;
+ --accent-gold-2: #C9A96E;
+ --accent-rose: #E8A4B0;
+ --accent-brown: #3D2B1F;
+ --accent-warm-muted: #8B6F5E;
+ --accent-lavender: #C4B5D4;
+
+ /* Typography scale */
+ --font-display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+ --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+ --font-emotional: 'Lora', Georgia, serif;
+ --font-handwritten: 'Dancing Script', cursive;
+
+ /* Spacing */
+ --space-xs: 0.25rem;
+ --space-sm: 0.5rem;
+ --space-md: 1rem;
+ --space-lg: 1.5rem;
+ --space-xl: 2rem;
+ --space-2xl: 3rem;
+ --space-3xl: 4rem;
+ --space-4xl: 6rem;
+ --space-section: 8rem;
+
+ /* Radii */
+ --radius-sm: 8px;
+ --radius-md: 12px;
+ --radius-lg: 20px;
+ --radius-full: 9999px;
+
+ /* Transitions */
+ --transition-fast: 150ms ease;
+ --transition-base: 300ms ease;
+ --transition-slow: 500ms ease;
+
+ /* Shadows */
+ --shadow-sm: 0 1px 2px rgba(23, 20, 18, 0.04);
+ --shadow-md: 0 4px 12px rgba(23, 20, 18, 0.06);
+ --shadow-lg: 0 8px 24px rgba(23, 20, 18, 0.08);
+ --shadow-xl: 0 16px 48px rgba(23, 20, 18, 0.1);
+}
+
+
+/* ---- Keyframes ---- */
+@media (prefers-reduced-motion: no-preference) {
+ @keyframes fadeRise {
+ from {
+ opacity: 0;
+ transform: translateY(20px);
+ }
+ to {
+ opacity: 1;
+ transform: translateY(0);
+ }
+ }
+
+ @keyframes heartbeat {
+ 0% { transform: scale(1); }
+ 15% { transform: scale(1.1); }
+ 30% { transform: scale(1); }
+ 45% { transform: scale(1.08); }
+ 60% { transform: scale(1); }
+ 100% { transform: scale(1); }
+ }
+
+ @keyframes float {
+ 0%, 100% { transform: translateY(0); }
+ 50% { transform: translateY(-8px); }
+ }
+
+ @keyframes wave {
+ 0%, 100% { transform: scaleY(0.5); }
+ 50% { transform: scaleY(1); }
+ }
+
+ @keyframes shimmer {
+ 0% { background-position: -200% 0; }
+ 100% { background-position: 200% 0; }
+ }
+
+ @keyframes slideIn {
+ from {
+ opacity: 0;
+ transform: translateX(100%);
+ }
+ to {
+ opacity: 1;
+ transform: translateX(0);
+ }
+ }
+
+ @keyframes slideOut {
+ from {
+ opacity: 1;
+ transform: translateX(0);
+ }
+ to {
+ opacity: 0;
+ transform: translateX(100%);
+ }
+ }
+
+ @keyframes fadeIn {
+ from { opacity: 0; }
+ to { opacity: 1; }
+ }
+
+ @keyframes fadeOut {
+ from { opacity: 1; }
+ to { opacity: 0; }
+ }
+
+ @keyframes scaleIn {
+ from {
+ opacity: 0;
+ transform: scale(0.95);
+ }
+ to {
+ opacity: 1;
+ transform: scale(1);
+ }
+ }
+}
+
+
+/* ---- Animation Utility Classes ---- */
+.fade-rise {
+ animation: fadeRise 0.8s ease-out forwards;
+}
+
+.fade-rise-delay {
+ opacity: 0;
+ animation: fadeRise 0.8s ease-out 0.2s forwards;
+}
+
+.fade-rise-delay-2 {
+ opacity: 0;
+ animation: fadeRise 0.8s ease-out 0.4s forwards;
+}
+
+.heartbeat {
+ animation: heartbeat 1.4s ease-in-out infinite;
+}
+
+.float {
+ animation: float 4s ease-in-out infinite;
+}
+
+.shimmer {
+ background: linear-gradient(90deg, var(--surface) 25%, var(--border) 50%, var(--surface) 75%);
+ background-size: 200% 100%;
+ animation: shimmer 1.8s ease-in-out infinite;
+}
+
+/* Observed elements start hidden, animate in when .fade-rise is added */
+.observe-fade {
+ opacity: 0;
+}
+
+/* Reduced motion: skip all animations, show everything immediately */
+@media (prefers-reduced-motion: reduce) {
+ .fade-rise,
+ .fade-rise-delay,
+ .fade-rise-delay-2,
+ .observe-fade {
+ animation: none !important;
+ opacity: 1 !important;
+ transform: none !important;
+ }
+
+ .heartbeat,
+ .float,
+ .shimmer {
+ animation: none !important;
+ }
+}
+
+
+/* ---- Base Typography ---- */
+.font-display { font-family: var(--font-display); }
+.font-body { font-family: var(--font-body); }
+.font-emotional { font-family: var(--font-emotional); }
+.font-handwritten { font-family: var(--font-handwritten); }
+
+/* ---- Shared Component Tokens ---- */
+.surface-card {
+  background: rgba(250, 250, 248, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(231, 228, 225, 0.6);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px 0 rgba(23, 20, 18, 0.05);
+}
+
+ .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem; /* slightly smaller padding for better pill shape */
+  background: var(--structural-black);
+  color: var(--structural-white);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  text-decoration: none;
+  line-height: 1.4;
+  white-space: nowrap; /* Prevent text from stacking vertically */
+ }
+ 
+ .btn-primary svg {
+   width: 20px;
+   height: 20px;
+   flex-shrink: 0;
+ }
+
+.btn-primary:hover {
+ transform: scale(1.03);
+ box-shadow: var(--shadow-md);
+}
+
+.btn-primary:active {
+ transform: scale(0.98);
+}
+
+.btn-primary:disabled {
+ opacity: 0.5;
+ cursor: not-allowed;
+ transform: none;
+}
+
+/* Section layout helper */
+.section {
+ padding: var(--space-section) var(--space-xl);
+ max-width: 1200px;
+ margin: 0 auto;
+}
+
+.section-header {
+ text-align: center;
+ margin-bottom: var(--space-3xl);
+}
+
+.section-eyebrow {
+ font-family: var(--font-handwritten);
+ font-size: 1.125rem;
+ color: var(--accent-pink);
+ margin-bottom: var(--space-sm);
+ display: block;
+}
+
+.section-title {
+ font-family: var(--font-display);
+ font-size: clamp(2rem, 5vw, 3rem);
+ color: var(--ink);
+ line-height: 1.1;
+ letter-spacing: -0.02em;
+ margin: 0;
+}
+
+.section-description {
+ font-family: var(--font-body);
+ font-size: 1rem;
+ color: var(--body-text);
+ max-width: 36rem;
+ margin: var(--space-md) auto 0;
+ line-height: 1.7;
+}
+
+/* Divider between sections */
+.section-divider {
+ width: 60px;
+ height: 1px;
+ background: var(--border);
+ margin: 0 auto;
+ border: none;
+}

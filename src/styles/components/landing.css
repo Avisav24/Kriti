@@ -1,0 +1,119 @@
+/* ==========================================================
+ Cinematic Landing / Adaptive Hero
+ ========================================================== */
+
+.landing {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  overflow: hidden;
+}
+
+.landing-exit {
+ animation: fadeOut 0.6s ease-out forwards;
+ pointer-events: none;
+}
+
+/* Video background */
+.landing-video-wrap {
+ position: absolute;
+ inset: auto 0 0 0;
+ top: 200px;
+ overflow: hidden;
+}
+
+.landing-video {
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
+ transition: opacity 0.5s ease;
+}
+
+/* Static hero image fallback */
+.landing-hero-img {
+ position: absolute;
+ inset: 0;
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
+ object-position: center;
+}
+
+/* Gradient overlay */
+.landing-overlay {
+ position: absolute;
+ inset: 0;
+ background: linear-gradient(
+ to bottom,
+ var(--canvas) 0%,
+ transparent 30%,
+ transparent 70%,
+ var(--canvas) 100%
+ );
+ pointer-events: none;
+}
+
+/* Content centered over video */
+.landing-content {
+ position: relative;
+ z-index: 10;
+ text-align: center;
+ padding: var(--space-xl);
+ max-width: 800px;
+}
+
+.landing-eyebrow {
+ font-family: var(--font-handwritten);
+ font-size: 1.25rem;
+ color: var(--body-text);
+ margin-bottom: var(--space-lg);
+ display: block;
+}
+
+.landing-headline {
+ font-family: var(--font-display);
+ font-size: clamp(2.5rem, 8vw, 5rem);
+ line-height: 0.95;
+ letter-spacing: -2.46px;
+ color: var(--ink);
+ margin-bottom: var(--space-xl);
+}
+
+.landing-headline em {
+ color: var(--body-text);
+ font-style: italic;
+}
+
+.landing-description {
+ font-family: var(--font-body);
+ font-size: clamp(1rem, 2.5vw, 1.125rem);
+ color: var(--body-text);
+ max-width: 36rem;
+ margin: 0 auto var(--space-2xl);
+ line-height: 1.7;
+}
+
+.landing-cta {
+ padding: 1.125rem 3.5rem;
+ font-size: 1.0625rem;
+}
+
+/* Responsive */
+@media (min-width: 640px) {
+ .landing-headline {
+ font-size: clamp(3.5rem, 8vw, 5rem);
+ }
+}
+
+@media (min-width: 768px) {
+ .landing-headline {
+ font-size: 5rem;
+ }
+ .landing-video-wrap {
+ top: 300px;
+ }
+}

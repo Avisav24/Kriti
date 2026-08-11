@@ -1,0 +1,174 @@
+/* ==========================================================
+ * Comfort Videos Section
+ * ========================================================== */
+
+.comfort-videos-section {
+  background: var(--structural-black);
+  color: var(--structural-white);
+  width: 100%;
+}
+
+.comfort-videos-section .section-title,
+.comfort-videos-section .comfort-card-title {
+  color: var(--structural-white);
+}
+
+.comfort-videos-section .section-description,
+.comfort-videos-section .comfort-card-description {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.comfort-videos-section .surface-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.comfort-videos-section .surface-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.comfort-videos-grid {
+ display: grid;
+ grid-template-columns: 1fr;
+ gap: var(--space-xl);
+}
+
+.comfort-card {
+ padding: var(--space-2xl);
+ text-align: center;
+ position: relative;
+ overflow: hidden;
+ transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+ cursor: pointer;
+}
+
+.comfort-card:hover {
+ transform: translateY(-2px);
+ box-shadow: var(--shadow-md);
+}
+
+.comfort-card-emoji {
+ font-size: 3rem;
+ margin-bottom: var(--space-md);
+ display: inline-block;
+}
+
+.comfort-card-title {
+ font-family: var(--font-display);
+ font-size: 1.5rem;
+ color: var(--ink);
+ margin-bottom: var(--space-sm);
+}
+
+.comfort-card-description {
+ font-family: var(--font-body);
+ font-size: 0.9375rem;
+ color: var(--body-text);
+ line-height: 1.6;
+ margin-bottom: var(--space-lg);
+}
+
+.comfort-card-poster {
+ width: 100%;
+ border-radius: var(--radius-md);
+ aspect-ratio: 16/9;
+ object-fit: cover;
+ background: var(--surface);
+}
+
+.comfort-card-play {
+ position: absolute;
+ inset: 0;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ background: rgba(23, 20, 18, 0.15);
+ border-radius: var(--radius-lg);
+ opacity: 0;
+ transition: opacity var(--transition-fast);
+}
+
+.comfort-card:hover .comfort-card-play {
+ opacity: 1;
+}
+
+.comfort-card-play-icon {
+ width: 64px;
+ height: 64px;
+ border-radius: 50%;
+ background: var(--structural-white);
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ box-shadow: var(--shadow-lg);
+}
+
+.comfort-card-play-icon svg {
+ width: 24px;
+ height: 24px;
+ color: var(--ink);
+ margin-left: 3px;
+}
+
+/* Video modal */
+.video-modal {
+ width: 90vw;
+ max-width: 800px;
+ border-radius: var(--radius-lg);
+ overflow: hidden;
+ background: var(--structural-black);
+}
+
+.video-modal-header {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ padding: var(--space-md) var(--space-lg);
+ background: var(--structural-black);
+}
+
+.video-modal-title {
+ font-family: var(--font-display);
+ font-size: 1.125rem;
+ color: var(--structural-white);
+}
+
+.video-modal-close {
+ width: 36px;
+ height: 36px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ color: var(--structural-white);
+ opacity: 0.7;
+ transition: opacity var(--transition-fast);
+ cursor: pointer;
+}
+
+.video-modal-close:hover {
+ opacity: 1;
+}
+
+.video-modal video {
+ width: 100%;
+ display: block;
+}
+
+/* Slow connection gate */
+.video-load-gate {
+ padding: var(--space-3xl) var(--space-xl);
+ text-align: center;
+}
+
+.video-load-gate p {
+ font-family: var(--font-body);
+ font-size: 0.875rem;
+ color: var(--body-text);
+ margin-bottom: var(--space-lg);
+}
+
+@media (min-width: 640px) {
+ .comfort-videos-grid {
+ grid-template-columns: repeat(2, 1fr);
+ }
+}

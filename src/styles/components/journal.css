@@ -1,0 +1,93 @@
+/* ==========================================================
+ Journal
+ ========================================================== */
+
+.journal-container {
+ max-width: 640px;
+ margin: 0 auto;
+}
+
+.journal-form {
+ display: flex;
+ flex-direction: column;
+ gap: var(--space-lg);
+}
+
+.journal-textarea {
+ width: 100%;
+ min-height: 180px;
+ padding: var(--space-lg);
+ font-family: var(--font-body);
+ font-size: 1rem;
+ color: var(--ink);
+ background: var(--structural-white);
+ border: 1px solid var(--border);
+ border-radius: var(--radius-md);
+ outline: none;
+ resize: vertical;
+ transition: border-color var(--transition-fast);
+ line-height: 1.7;
+}
+
+.journal-textarea:focus {
+ border-color: var(--accent-pink);
+}
+
+.journal-textarea::placeholder {
+ color: var(--body-text);
+ opacity: 0.6;
+}
+
+.journal-footer {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: var(--space-md);
+}
+
+.journal-char-count {
+ font-family: var(--font-body);
+ font-size: 0.75rem;
+ color: var(--body-text);
+}
+
+.journal-submit {
+ align-self: flex-end;
+}
+
+/* Status messages inline, not modal */
+.journal-status {
+ padding: var(--space-lg);
+ border-radius: var(--radius-md);
+ font-family: var(--font-body);
+ font-size: 0.9375rem;
+ line-height: 1.6;
+ animation: fadeRise 0.4s ease-out;
+}
+
+.journal-status-success {
+ background: linear-gradient(135deg, #f0faf0, #e8f5e8);
+ border: 1px solid #c8e6c8;
+ color: #2d6a2d;
+}
+
+.journal-status-error {
+ background: linear-gradient(135deg, #fef2f2, #fde8e8);
+ border: 1px solid #f5c6c6;
+ color: #9a2c2c;
+}
+
+.journal-status-error strong {
+ display: block;
+ margin-bottom: var(--space-xs);
+}
+
+/* Draft indicator */
+.journal-draft-notice {
+ font-family: var(--font-body);
+ font-size: 0.75rem;
+ color: var(--accent-warm-muted);
+ display: flex;
+ align-items: center;
+ gap: var(--space-xs);
+}

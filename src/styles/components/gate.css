@@ -1,0 +1,87 @@
+/* ==========================================================
+ Access Gate
+ ========================================================== */
+
+.gate {
+ position: fixed;
+ inset: 0;
+ z-index: 9999;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ background: var(--canvas);
+ animation: fadeIn 0.6s ease-out;
+}
+
+.gate-card {
+ width: 90%;
+ max-width: 420px;
+ padding: var(--space-3xl) var(--space-2xl);
+ text-align: center;
+}
+
+.gate-heart {
+ font-size: 2rem;
+ margin-bottom: var(--space-lg);
+ display: inline-block;
+}
+
+.gate-title {
+ font-family: var(--font-display);
+ font-size: 1.75rem;
+ color: var(--ink);
+ margin-bottom: var(--space-sm);
+ line-height: 1.2;
+}
+
+.gate-subtitle {
+ font-family: var(--font-body);
+ font-size: 0.9375rem;
+ color: var(--body-text);
+ margin-bottom: var(--space-2xl);
+ line-height: 1.6;
+}
+
+.gate-input {
+ width: 100%;
+ padding: 0.875rem 1.25rem;
+ font-family: var(--font-body);
+ font-size: 1rem;
+ color: var(--ink);
+ background: var(--structural-white);
+ border: 1px solid var(--border);
+ border-radius: var(--radius-md);
+ outline: none;
+ transition: border-color var(--transition-fast);
+ margin-bottom: var(--space-lg);
+}
+
+.gate-input:focus {
+ border-color: var(--accent-pink);
+}
+
+.gate-input::placeholder {
+ color: var(--body-text);
+ opacity: 0.6;
+}
+
+.gate-submit {
+ width: 100%;
+}
+
+.gate-error {
+ font-family: var(--font-body);
+ font-size: 0.875rem;
+ color: var(--accent-pink);
+ margin-top: var(--space-md);
+ opacity: 0;
+ transition: opacity var(--transition-fast);
+}
+
+.gate-error.visible {
+ opacity: 1;
+}
+
+.gate-exit {
+ animation: fadeOut 0.4s ease-out forwards;
+}
