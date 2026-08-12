@@ -147,7 +147,7 @@ export function renderMusicPlayer(): HTMLElement {
   fullPlayerDialog.id = 'music-full-player';
   
   fullPlayerDialog.innerHTML = `
-    <div id="music-full-video-wrapper" class="music-full-video-bg" style="display: none;">
+    <div id="music-full-video-wrapper" class="music-full-video-bg" style="opacity: 0; pointer-events: none; transition: opacity 0.4s ease;">
       <div id="youtube-player-container"></div>
       <div class="music-full-video-overlay"></div>
     </div>
@@ -482,8 +482,8 @@ export function renderMusicPlayer(): HTMLElement {
     
     window.onYouTubeIframeAPIReady = () => {
       ytPlayer = new window.YT.Player('youtube-player-container', {
-        height: '0',
-        width: '0',
+        height: '100%',
+        width: '100%',
         playerVars: {
           autoplay: 1,
           controls: 0,
@@ -812,7 +812,7 @@ export function renderMusicPlayer(): HTMLElement {
     
     fCd.style.opacity = '0';
     fCd.style.pointerEvents = 'none';
-    fVideoWrapper.style.display = 'block';
+    fVideoWrapper.style.opacity = '1';
   });
 
   fViewToggleCdBtn.addEventListener('click', () => {
@@ -823,7 +823,7 @@ export function renderMusicPlayer(): HTMLElement {
     
     fCd.style.opacity = '1';
     fCd.style.pointerEvents = 'auto';
-    fVideoWrapper.style.display = 'none';
+    fVideoWrapper.style.opacity = '0';
   });
 
   fPlaylistBtn.addEventListener('click', () => {
