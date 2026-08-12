@@ -149,7 +149,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--ink);
+  color: rgba(255, 255, 255, 0.9);
   font-family: var(--font-body);
   font-size: 0.75rem;
   font-weight: 600;
@@ -179,7 +179,7 @@
   justify-content: center;
   background: transparent;
   border: none;
-  color: var(--body-text);
+  color: rgba(255, 255, 255, 0.85);
   cursor: pointer;
   border-radius: 50%;
   transition: color 0.2s, background 0.2s;
@@ -251,11 +251,11 @@
 .music-panel-pinned-subtitle {
   font-family: var(--font-body);
   font-size: 0.8125rem;
-  color: var(--accent-pink);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .music-panel-pinned-action {
-  color: var(--accent-pink);
+  color: rgba(255, 255, 255, 0.9);
   font-size: 0.8125rem;
   font-weight: 500;
 }
@@ -328,7 +328,7 @@
   background: none;
   border: none;
   padding: 8px;
-  color: var(--body-text);
+  color: rgba(255, 255, 255, 0.85);
   cursor: pointer;
   display: flex;
   align-items: center;
