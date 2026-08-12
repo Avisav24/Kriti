@@ -553,6 +553,20 @@
   opacity: 1;
 }
 
+.music-full-player.video-mode-active .music-full-title,
+.music-full-player.video-mode-active .music-full-channel,
+.music-full-player.video-mode-active .music-full-time {
+  opacity: 0.4;
+}
+
+.music-full-player.video-mode-active .music-full-ctrl-btn {
+  opacity: 0.4 !important;
+}
+
+.music-full-player.video-mode-active .music-full-ctrl-btn:hover {
+  opacity: 1 !important;
+}
+
 /* Bottom Section */
 .music-full-bottom-section {
   padding: 0 var(--space-xl) 80px var(--space-xl);
