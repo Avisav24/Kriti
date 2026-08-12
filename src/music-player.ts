@@ -172,7 +172,7 @@ export function renderMusicPlayer(): HTMLElement {
       <div class="music-full-cd" aria-label="CD Art">
         <img class="music-full-cd-art" id="music-full-art" src="" alt="">
       </div>
-      <div id="music-full-video-wrapper" style="display: none; width: 100%; max-width: 480px; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+      <div id="music-full-video-wrapper" style="display: none; width: 100%; max-width: 480px; aspect-ratio: 16/9; border-radius: 16px; overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1);">
         <div id="youtube-player-container"></div>
       </div>
     </div>
@@ -479,9 +479,9 @@ export function renderMusicPlayer(): HTMLElement {
         width: '0',
         playerVars: {
           autoplay: 1,
-          controls: 1,
-          disablekb: 0,
-          fs: 1,
+          controls: 0,
+          disablekb: 1,
+          fs: 0,
           rel: 0,
         },
         events: {
@@ -809,7 +809,7 @@ export function renderMusicPlayer(): HTMLElement {
         ytContainer.style.width = '100%';
         ytContainer.style.height = '100%';
         ytContainer.style.opacity = '1';
-        ytContainer.style.pointerEvents = 'auto';
+        ytContainer.style.pointerEvents = 'none'; // Unclickable so it feels embedded
         ytContainer.style.zIndex = '10';
       }
       showTooltip("Video View");
