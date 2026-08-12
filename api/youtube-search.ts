@@ -141,7 +141,10 @@ export default async function handler(req: Request): Promise<Response> {
       const errorData = await ytResponse.json().catch(() => ({}));
       console.error(`YouTube API error with key ${i + 1}:`, errorData);
       
-      if (ytResponse.status === 403 && errorData.error?.errors?.[0]?.reason === 'quotaExceeded') {
+      const isQuota = ytResponse.status === 429 || 
+                      (ytResponse.status === 403 && (errorData.error?.errors?.[0]?.reason === 'quotaExceeded' || errorData.error?.errors?.[0]?.reason === 'rateLimitExceeded'));
+                      
+      if (isQuota) {
         isQuotaExceeded = true;
         console.warn(`Key ${i + 1} quota exceeded. Trying next...`);
         continue;
