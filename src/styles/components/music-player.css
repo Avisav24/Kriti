@@ -600,7 +600,7 @@
   height: 500px;
   background: radial-gradient(circle, rgba(255, 100, 0, 0.5) 0%, transparent 70%);
   filter: blur(50px);
-  animation: float1 8s ease-in-out infinite alternate;
+  animation: float1 20s ease-in-out infinite alternate;
 }
 
 .light-leak-2 {
@@ -611,7 +611,7 @@
   height: 600px;
   background: radial-gradient(circle, rgba(0, 100, 255, 0.4) 0%, transparent 70%);
   filter: blur(60px);
-  animation: float2 12s ease-in-out infinite alternate;
+  animation: float2 30s ease-in-out infinite alternate;
 }
 
 .light-streak {
@@ -623,7 +623,7 @@
   background: linear-gradient(90deg, transparent, rgba(0, 150, 255, 0.7), rgba(255, 0, 100, 0.7), rgba(255, 200, 0, 0.7), transparent);
   transform: translate(-50%, -50%) rotate(-40deg);
   filter: blur(35px);
-  animation: streakMove 7s linear infinite alternate;
+  animation: streakMove 18s linear infinite alternate;
   mix-blend-mode: screen;
 }
 
