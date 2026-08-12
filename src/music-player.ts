@@ -3,7 +3,7 @@
  Dual engine: local <audio> (kalyani.mp3) + YouTube IFrame API
  ========================================================== */
 
-import { iconPlay, iconPause, iconSearch, iconX, iconHeart, iconHeartFill, iconRepeat } from './icons';
+import { iconPlay, iconPause, iconSearch, iconX, iconHeart, iconHeartFill, iconRepeat, iconVideo, iconDisc } from './icons';
 
 // Types
 interface YouTubeSearchResult {
@@ -106,7 +106,6 @@ export function renderMusicPlayer(): HTMLElement {
       <div id="music-search-state" class="music-panel-state" style="display: none;"></div>
       <ul class="music-panel-results" id="music-search-results"></ul>
     </div>
-    <div id="youtube-player-container"></div>
   `;
   
   document.body.appendChild(dialog);
@@ -157,6 +156,9 @@ export function renderMusicPlayer(): HTMLElement {
         <h4 class="music-full-header-title">Kriti</h4>
       </div>
       <div class="music-full-header-actions">
+        <button class="music-full-btn" id="music-full-view-toggle" aria-label="Toggle View" title="Watch Video">
+          ${iconVideo()}
+        </button>
         <button class="music-full-btn" id="music-full-search" aria-label="Search">
           ${iconSearch()}
         </button>
@@ -167,8 +169,11 @@ export function renderMusicPlayer(): HTMLElement {
     </div>
     
     <div class="music-full-art-section">
-      <div class="music-full-cd" aria-hidden="true">
+      <div class="music-full-cd" aria-label="CD Art">
         <img class="music-full-cd-art" id="music-full-art" src="" alt="">
+      </div>
+      <div id="music-full-video-wrapper" style="display: none; width: 100%; max-width: 480px; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+        <div id="youtube-player-container"></div>
       </div>
     </div>
     
@@ -280,6 +285,13 @@ export function renderMusicPlayer(): HTMLElement {
   const fTitleEl = fullPlayerDialog.querySelector('#music-full-title') as HTMLElement;
   const fChannelEl = fullPlayerDialog.querySelector('#music-full-channel') as HTMLElement;
   const fArtEl = fullPlayerDialog.querySelector('#music-full-art') as HTMLImageElement;
+  
+  const fViewToggleBtn = fullPlayerDialog.querySelector('#music-full-view-toggle') as HTMLButtonElement;
+  const fArtSection = fullPlayerDialog.querySelector('.music-full-art-section') as HTMLElement;
+  const fCd = fullPlayerDialog.querySelector('.music-full-cd') as HTMLElement;
+  const fVideoWrapper = fullPlayerDialog.querySelector('#music-full-video-wrapper') as HTMLElement;
+  
+  let isVideoView = false;
   
   const fCloseBtn = fullPlayerDialog.querySelector('#music-full-close') as HTMLButtonElement;
   const fSearchBtn = fullPlayerDialog.querySelector('#music-full-search') as HTMLButtonElement;
@@ -467,9 +479,9 @@ export function renderMusicPlayer(): HTMLElement {
         width: '0',
         playerVars: {
           autoplay: 1,
-          controls: 0,
-          disablekb: 1,
-          fs: 0,
+          controls: 1,
+          disablekb: 0,
+          fs: 1,
           rel: 0,
         },
         events: {
@@ -781,6 +793,43 @@ export function renderMusicPlayer(): HTMLElement {
     if (!searchInput.value) searchInput.focus();
   });
   
+  fViewToggleBtn.addEventListener('click', () => {
+    if (currentEngine !== 'youtube') {
+      showTooltip("Video only available for YouTube songs");
+      return;
+    }
+    isVideoView = !isVideoView;
+    if (isVideoView) {
+      fViewToggleBtn.innerHTML = iconDisc();
+      fCd.style.display = 'none';
+      fVideoWrapper.style.display = 'block';
+      const ytContainer = document.getElementById('youtube-player-container');
+      if (ytContainer) {
+        ytContainer.style.position = 'relative';
+        ytContainer.style.width = '100%';
+        ytContainer.style.height = '100%';
+        ytContainer.style.opacity = '1';
+        ytContainer.style.pointerEvents = 'auto';
+        ytContainer.style.zIndex = '10';
+      }
+      showTooltip("Video View");
+    } else {
+      fViewToggleBtn.innerHTML = iconVideo();
+      fCd.style.display = 'flex';
+      fVideoWrapper.style.display = 'none';
+      const ytContainer = document.getElementById('youtube-player-container');
+      if (ytContainer) {
+        ytContainer.style.position = 'absolute';
+        ytContainer.style.width = '1px';
+        ytContainer.style.height = '1px';
+        ytContainer.style.opacity = '0';
+        ytContainer.style.pointerEvents = 'none';
+        ytContainer.style.zIndex = '-1';
+      }
+      showTooltip("Disc View");
+    }
+  });
+
   fPlaylistBtn.addEventListener('click', () => {
     fullPlayerDialog.close();
     playlistDialog.showModal();
