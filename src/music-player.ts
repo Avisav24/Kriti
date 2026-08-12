@@ -404,6 +404,12 @@ export function renderMusicPlayer(): HTMLElement {
           updateProgressUI(audio.currentTime, audio.duration);
         }
       });
+      
+      audio.addEventListener('ended', () => {
+        if (!isLooping) {
+          playNext();
+        }
+      });
     }
     return audio;
   };
@@ -462,7 +468,7 @@ export function renderMusicPlayer(): HTMLElement {
                 ytPlayer.seekTo(0);
                 ytPlayer.playVideo();
               } else {
-                playNext(); // Auto-advance playlist
+                setTimeout(() => playNext(), 100); // Auto-advance playlist with slight delay
               }
             }
           }
