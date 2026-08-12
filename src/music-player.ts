@@ -154,9 +154,6 @@ export function renderMusicPlayer(): HTMLElement {
       <div class="music-full-header-text">
         <span class="music-full-header-label">Playing for</span>
         <h4 class="music-full-header-title">Kriti</h4>
-        <button class="music-full-view-toggle-center" id="music-full-view-toggle" aria-label="Toggle View" title="Watch Video">
-          ${iconVideo()}
-        </button>
       </div>
       <div class="music-full-header-actions">
         <button class="music-full-btn" id="music-full-search" aria-label="Search">
@@ -165,6 +162,13 @@ export function renderMusicPlayer(): HTMLElement {
         <button class="music-full-btn" id="music-full-playlist" aria-label="Playlist">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15V6"/><path d="M18.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/><path d="M12 12H3"/><path d="M16 6H3"/><path d="M12 18H3"/></svg>
         </button>
+      </div>
+    </div>
+    
+    <div class="music-view-toggle-container">
+      <div class="music-view-toggle">
+        <button class="music-toggle-btn active" id="music-toggle-cd" aria-label="CD View" title="CD View">${iconDisc()}</button>
+        <button class="music-toggle-btn" id="music-toggle-video" aria-label="Video View" title="Watch Video">${iconVideo()}</button>
       </div>
     </div>
     
@@ -286,7 +290,8 @@ export function renderMusicPlayer(): HTMLElement {
   const fChannelEl = fullPlayerDialog.querySelector('#music-full-channel') as HTMLElement;
   const fArtEl = fullPlayerDialog.querySelector('#music-full-art') as HTMLImageElement;
   
-  const fViewToggleBtn = fullPlayerDialog.querySelector('#music-full-view-toggle') as HTMLButtonElement;
+  const fViewToggleCdBtn = fullPlayerDialog.querySelector('#music-toggle-cd') as HTMLButtonElement;
+  const fViewToggleVideoBtn = fullPlayerDialog.querySelector('#music-toggle-video') as HTMLButtonElement;
   const fArtSection = fullPlayerDialog.querySelector('.music-full-art-section') as HTMLElement;
   const fCd = fullPlayerDialog.querySelector('.music-full-cd') as HTMLElement;
   const fVideoWrapper = fullPlayerDialog.querySelector('#music-full-video-wrapper') as HTMLElement;
@@ -793,40 +798,45 @@ export function renderMusicPlayer(): HTMLElement {
     if (!searchInput.value) searchInput.focus();
   });
   
-  fViewToggleBtn.addEventListener('click', () => {
+  fViewToggleVideoBtn.addEventListener('click', () => {
     if (currentEngine !== 'youtube') {
       showTooltip("Video only available for YouTube songs");
       return;
     }
-    isVideoView = !isVideoView;
-    if (isVideoView) {
-      fViewToggleBtn.innerHTML = iconDisc();
-      fCd.style.display = 'none';
-      fVideoWrapper.style.display = 'block';
-      const ytContainer = document.getElementById('youtube-player-container');
-      if (ytContainer) {
-        ytContainer.style.position = 'relative';
-        ytContainer.style.width = '100%';
-        ytContainer.style.height = '100%';
-        ytContainer.style.opacity = '1';
-        ytContainer.style.pointerEvents = 'none'; // Unclickable so it feels embedded
-        ytContainer.style.zIndex = '10';
-      }
-      showTooltip("Video View");
-    } else {
-      fViewToggleBtn.innerHTML = iconVideo();
-      fCd.style.display = 'flex';
-      fVideoWrapper.style.display = 'none';
-      const ytContainer = document.getElementById('youtube-player-container');
-      if (ytContainer) {
-        ytContainer.style.position = 'absolute';
-        ytContainer.style.width = '1px';
-        ytContainer.style.height = '1px';
-        ytContainer.style.opacity = '0';
-        ytContainer.style.pointerEvents = 'none';
-        ytContainer.style.zIndex = '-1';
-      }
-      showTooltip("Disc View");
+    if (isVideoView) return;
+    isVideoView = true;
+    fViewToggleVideoBtn.classList.add('active');
+    fViewToggleCdBtn.classList.remove('active');
+    
+    fCd.style.display = 'none';
+    fVideoWrapper.style.display = 'block';
+    const ytContainer = document.getElementById('youtube-player-container');
+    if (ytContainer) {
+      ytContainer.style.position = 'relative';
+      ytContainer.style.width = '100%';
+      ytContainer.style.height = '100%';
+      ytContainer.style.opacity = '1';
+      ytContainer.style.pointerEvents = 'none'; // Unclickable so it feels embedded
+      ytContainer.style.zIndex = '10';
+    }
+  });
+
+  fViewToggleCdBtn.addEventListener('click', () => {
+    if (!isVideoView) return;
+    isVideoView = false;
+    fViewToggleCdBtn.classList.add('active');
+    fViewToggleVideoBtn.classList.remove('active');
+    
+    fCd.style.display = 'flex';
+    fVideoWrapper.style.display = 'none';
+    const ytContainer = document.getElementById('youtube-player-container');
+    if (ytContainer) {
+      ytContainer.style.position = 'absolute';
+      ytContainer.style.width = '1px';
+      ytContainer.style.height = '1px';
+      ytContainer.style.opacity = '0';
+      ytContainer.style.pointerEvents = 'none';
+      ytContainer.style.zIndex = '-1';
     }
   });
 
