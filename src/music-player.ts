@@ -154,11 +154,11 @@ export function renderMusicPlayer(): HTMLElement {
       <div class="music-full-header-text">
         <span class="music-full-header-label">Playing for</span>
         <h4 class="music-full-header-title">Kriti</h4>
-      </div>
-      <div class="music-full-header-actions">
-        <button class="music-full-btn" id="music-full-view-toggle" aria-label="Toggle View" title="Watch Video">
+        <button class="music-full-view-toggle-center" id="music-full-view-toggle" aria-label="Toggle View" title="Watch Video">
           ${iconVideo()}
         </button>
+      </div>
+      <div class="music-full-header-actions">
         <button class="music-full-btn" id="music-full-search" aria-label="Search">
           ${iconSearch()}
         </button>
