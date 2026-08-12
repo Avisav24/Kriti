@@ -32,15 +32,16 @@ export default async function handler(req: Request): Promise<Response> {
   try {
     const url = new URL(req.url);
     const query = url.searchParams.get('q');
+    const videoIdParam = url.searchParams.get('id');
 
-    if (!query || query.trim().length === 0) {
-      return new Response(JSON.stringify({ error: 'Query is required' }), {
+    if ((!query || query.trim().length === 0) && (!videoIdParam || videoIdParam.trim().length === 0)) {
+      return new Response(JSON.stringify({ error: 'Query (q) or video ID (id) is required' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    const cacheKey = query.trim().toLowerCase();
+    const cacheKey = (videoIdParam && videoIdParam.trim().length > 0) ? `id_${videoIdParam.trim()}` : query!.trim().toLowerCase();
 
     // Rate Limiting (Simple)
     // We use a single bucket for the app since it's a single-user private app
@@ -75,7 +76,7 @@ export default async function handler(req: Request): Promise<Response> {
     }
 
     const envKeys = process.env.YOUTUBE_API_KEY || '';
-    const hardcodedKeys = 'AIzaSyCm2iSUl5CjlXre1elwOGrv5txg9JrQ7bw, AIzaSyAqc8ZreavJR4lFYj78IC7DWWFjjL4bEeQ, AIzaSyA1JYRfM-dk3PkQRcF6fCMYLC6GRyer_qc, AIzaSyBn4XQT9UC9WlJyXbh79ZE_tJnfcd2fMrc, AIzaSyC1bWR0LNh_HOqaLnLRwt-IXjHvs-iEtNg, AIzaSyA7VYGvHIGeBJpS49U3qpSbkwfBdyNYrmE, AIzaSyA4TlXgFsqIduWRc5xpArzKb0Q-r7IMGDE, AIzaSyBago5TOpGaIaQx6lgTsC85JPzl3QxeQZI, AIzaSyD6ov0Xhj_ocNejmLLFCBGp-bcKY_vetgU, AIzaSyChtLyKy4_wfGgMOcw_s_870vU56qqE2qM, AIzaSyAt4JojPcw7bOo1o3j9xJ6KfK0f9U9HT9U, AIzaSyAoM51RtPYkwjBG4r_LXYtloMX2eykl5BQ';
+    const hardcodedKeys = 'AIzaSyC42f9G-Tdcr8RGuow3qZfj-6HB4zBJAq4, AIzaSyDwIcRqKGiG7f7Ehc7cqqJATcj0HLHiHCU, AIzaSyDKNNdsjSKKBad0cunsUVD5-gsls3uPu04, AIzaSyCm2iSUl5CjlXre1elwOGrv5txg9JrQ7bw, AIzaSyAqc8ZreavJR4lFYj78IC7DWWFjjL4bEeQ, AIzaSyA1JYRfM-dk3PkQRcF6fCMYLC6GRyer_qc, AIzaSyBn4XQT9UC9WlJyXbh79ZE_tJnfcd2fMrc, AIzaSyC1bWR0LNh_HOqaLnLRwt-IXjHvs-iEtNg, AIzaSyA7VYGvHIGeBJpS49U3qpSbkwfBdyNYrmE, AIzaSyA4TlXgFsqIduWRc5xpArzKb0Q-r7IMGDE, AIzaSyBago5TOpGaIaQx6lgTsC85JPzl3QxeQZI, AIzaSyD6ov0Xhj_ocNejmLLFCBGp-bcKY_vetgU, AIzaSyChtLyKy4_wfGgMOcw_s_870vU56qqE2qM, AIzaSyAt4JojPcw7bOo1o3j9xJ6KfK0f9U9HT9U, AIzaSyAoM51RtPYkwjBG4r_LXYtloMX2eykl5BQ';
     
     // Combine keys from env and hardcoded, then deduplicate
     const allKeys = [
@@ -100,13 +101,23 @@ export default async function handler(req: Request): Promise<Response> {
     for (let i = 0; i < YOUTUBE_API_KEYS.length; i++) {
       const currentKey = YOUTUBE_API_KEYS[i];
       
-      const ytUrl = new URL('https://youtube.googleapis.com/youtube/v3/search');
-      ytUrl.searchParams.set('part', 'snippet');
-      ytUrl.searchParams.set('type', 'video');
-      ytUrl.searchParams.set('videoEmbeddable', 'true');
-      ytUrl.searchParams.set('maxResults', '8');
-      ytUrl.searchParams.set('q', cacheKey);
-      ytUrl.searchParams.set('key', currentKey);
+      let ytUrl: URL;
+      if (videoIdParam && videoIdParam.trim().length > 0) {
+        ytUrl = new URL('https://youtube.googleapis.com/youtube/v3/videos');
+        ytUrl.searchParams.set('part', 'id,snippet');
+        ytUrl.searchParams.set('id', videoIdParam.trim());
+        ytUrl.searchParams.set('fields', 'items(id,snippet(title,channelTitle,thumbnails/medium/url,thumbnails/default/url))');
+        ytUrl.searchParams.set('key', currentKey);
+      } else {
+        ytUrl = new URL('https://youtube.googleapis.com/youtube/v3/search');
+        ytUrl.searchParams.set('part', 'snippet');
+        ytUrl.searchParams.set('type', 'video');
+        ytUrl.searchParams.set('videoEmbeddable', 'true');
+        ytUrl.searchParams.set('maxResults', '5');
+        ytUrl.searchParams.set('q', query!.trim());
+        ytUrl.searchParams.set('fields', 'items(id/videoId,snippet(title,channelTitle,thumbnails/medium/url,thumbnails/default/url))');
+        ytUrl.searchParams.set('key', currentKey);
+      }
 
       const ytResponse = await fetch(ytUrl.toString());
 
@@ -114,7 +125,7 @@ export default async function handler(req: Request): Promise<Response> {
         const ytData = await ytResponse.json();
         
         const results: YouTubeSearchResult[] = (ytData.items || []).map((item: any) => ({
-          videoId: item.id.videoId,
+          videoId: (videoIdParam && videoIdParam.trim().length > 0) ? item.id : item.id.videoId,
           title: item.snippet.title,
           channelTitle: item.snippet.channelTitle,
           thumbnailUrl: item.snippet.thumbnails?.medium?.url || item.snippet.thumbnails?.default?.url,
