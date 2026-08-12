@@ -72,7 +72,7 @@ export function renderMusicPlayer(): HTMLElement {
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
       </button>
       <button class="music-mini-btn" id="music-mini-heart" aria-label="Add to playlist" title="Save to Playlist">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        ${iconHeart()}
       </button>
       <button class="music-mini-btn" id="music-search-open" aria-label="Search" title="Search">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -177,7 +177,7 @@ export function renderMusicPlayer(): HTMLElement {
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
         </button>
         <button class="music-full-ctrl-btn" id="music-full-heart" aria-label="Add to playlist" title="Save to Playlist">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          ${iconHeart()}
         </button>
       </div>
     </div>
@@ -289,15 +289,12 @@ export function renderMusicPlayer(): HTMLElement {
     }
   };
 
-  const HEART_EMPTY_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
-  const HEART_FILLED_SVG = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
-
   const updateHeartUI = () => {
     const isSaved = currentEngine === 'youtube' && currentYtVideoId 
       ? savedSongs.some(s => s.videoId === currentYtVideoId)
       : false;
       
-    const heartIcon = isSaved ? HEART_FILLED_SVG : HEART_EMPTY_SVG;
+    const heartIcon = isSaved ? iconHeartFill() : iconHeart();
     if (isSaved) {
       fHeartBtn.classList.add('active');
       miniHeartBtn.classList.add('active');
@@ -826,6 +823,7 @@ export function renderMusicPlayer(): HTMLElement {
     }
     localStorage.setItem(SAVED_KEY, JSON.stringify(savedSongs));
     renderSavedSongs(); 
+    updateHeartUI();
     
     const searchBtns = resultsList.querySelectorAll(`.music-result-save[data-id="${res.videoId}"]`);
     searchBtns.forEach(el => {
