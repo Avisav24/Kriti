@@ -109,7 +109,7 @@
   margin-right: auto;
 }
 
-.music-panel-search svg {
+.music-panel-search > svg {
   position: absolute;
   left: var(--space-md);
   top: 50%;
@@ -134,7 +134,7 @@
 
 .music-panel-search .music-search-clear {
   position: absolute;
-  right: var(--space-sm);
+  right: 48px; /* space for playlist icon (24px + space) */
   top: 50%;
   transform: translateY(-50%);
   width: auto;
@@ -160,6 +160,34 @@
 .music-panel-search input:focus {
   border-color: var(--accent-pink);
   background: var(--structural-white);
+}
+
+.music-nav-playlist-btn {
+  position: absolute;
+  right: var(--space-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--body-text);
+  cursor: pointer;
+  border-radius: 50%;
+  transition: color 0.2s, background 0.2s;
+}
+
+.music-nav-playlist-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.music-nav-playlist-btn:hover {
+  color: var(--ink);
+  background: var(--surface-hover);
 }
 
 /* Content Area */
