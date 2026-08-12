@@ -583,7 +583,7 @@
 }
 
 .music-full-player.video-mode-active .music-full-btn {
-  opacity: 0.4;
+  opacity: 0.15;
 }
 
 .music-full-player.video-mode-active .music-full-btn:hover {
@@ -593,15 +593,24 @@
 .music-full-player.video-mode-active .music-full-title,
 .music-full-player.video-mode-active .music-full-channel,
 .music-full-player.video-mode-active .music-full-time {
-  opacity: 0.4;
+  opacity: 0.15;
 }
 
 .music-full-player.video-mode-active .music-full-ctrl-btn {
-  opacity: 0.4 !important;
+  opacity: 0.15 !important;
 }
 
 .music-full-player.video-mode-active .music-full-ctrl-btn:hover {
   opacity: 1 !important;
+}
+
+.music-full-player.video-mode-active .music-view-toggle {
+  opacity: 0.15;
+  transition: opacity 0.2s;
+}
+
+.music-full-player.video-mode-active .music-view-toggle:hover {
+  opacity: 1;
 }
 
 .music-full-player.video-mode-active .music-full-info {
