@@ -325,6 +325,11 @@
   background: #000 !important;
 }
 
+.music-full-player.video-mode-active .music-full-header {
+  padding-top: var(--space-sm);
+  padding-bottom: 0;
+}
+
 /* Header */
 .music-full-header {
   display: flex;
@@ -565,6 +570,14 @@
 
 .music-full-player.video-mode-active .music-full-ctrl-btn:hover {
   opacity: 1 !important;
+}
+
+.music-full-player.video-mode-active .music-full-info {
+  margin-bottom: var(--space-md);
+}
+
+.music-full-player.video-mode-active .music-full-bottom-section {
+  padding-bottom: 30px;
 }
 
 /* Bottom Section */
