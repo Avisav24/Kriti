@@ -338,6 +338,7 @@
   padding: var(--space-lg) var(--space-md);
   position: relative;
   z-index: 10;
+  transition: padding 0.4s ease;
 }
 
 .music-full-video-bg {
@@ -515,6 +516,7 @@
   margin-bottom: var(--space-xl);
   position: relative;
   z-index: 10;
+  transition: margin 0.4s ease;
 }
 
 .music-full-title-wrapper {
@@ -573,11 +575,11 @@
 }
 
 .music-full-player.video-mode-active .music-full-info {
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-lg);
 }
 
 .music-full-player.video-mode-active .music-full-bottom-section {
-  padding-bottom: 30px;
+  padding-bottom: 50px;
 }
 
 /* Bottom Section */
@@ -585,6 +587,7 @@
   padding: 0 var(--space-xl) 80px var(--space-xl);
   position: relative;
   z-index: 10;
+  transition: padding 0.4s ease;
 }
 
 .music-full-progress {
