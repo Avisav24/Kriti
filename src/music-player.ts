@@ -74,6 +74,9 @@ export function renderMusicPlayer(): HTMLElement {
       <button class="music-mini-btn" id="music-mini-heart" aria-label="Add to playlist" title="Save to Playlist">
         ${iconHeart()}
       </button>
+      <button class="music-mini-btn" id="music-playlist-open" aria-label="Playlist" title="Playlist">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15V6"/><path d="M18.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/><path d="M12 12H3"/><path d="M16 6H3"/><path d="M12 18H3"/></svg>
+      </button>
       <button class="music-mini-btn" id="music-search-open" aria-label="Search" title="Search">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
       </button>
@@ -100,6 +103,28 @@ export function renderMusicPlayer(): HTMLElement {
       </button>
     </div>
     <div class="music-panel-content">
+      <div id="music-search-state" class="music-panel-state" style="display: none;"></div>
+      <ul class="music-panel-results" id="music-search-results"></ul>
+    </div>
+    <div id="youtube-player-container"></div>
+  `;
+  
+  document.body.appendChild(dialog);
+
+  // 2.5 Create Playlist Panel Dialog
+  const playlistDialog = document.createElement('dialog');
+  playlistDialog.className = 'music-panel-dialog';
+  playlistDialog.id = 'music-playlist-panel';
+  
+  playlistDialog.innerHTML = `
+    <div class="music-panel-header">
+      <div class="music-panel-handle"></div>
+      <h2 style="font-family: var(--font-heading); font-size: 1.2rem; margin:0; padding-left: 10px; color: var(--ink);">Playlist</h2>
+      <button class="music-panel-close" id="music-playlist-close" aria-label="Close playlist">
+        ${iconX()}
+      </button>
+    </div>
+    <div class="music-panel-content">
       <div class="music-panel-pinned" id="music-pinned-song">
         <!-- Injected via TS -->
       </div>
@@ -112,14 +137,10 @@ export function renderMusicPlayer(): HTMLElement {
         </div>
       </div>
       <ul class="music-panel-results" id="music-saved-results"></ul>
-      
-      <div id="music-search-state" class="music-panel-state" style="display: none;"></div>
-      <ul class="music-panel-results" id="music-search-results"></ul>
     </div>
-    <div id="youtube-player-container"></div>
   `;
   
-  document.body.appendChild(dialog);
+  document.body.appendChild(playlistDialog);
 
   // 3. Create Full Screen Player Dialog
   const fullPlayerDialog = document.createElement('dialog');
@@ -271,12 +292,14 @@ export function renderMusicPlayer(): HTMLElement {
   const resultsList = dialog.querySelector('#music-search-results') as HTMLElement;
   const stateContainer = dialog.querySelector('#music-search-state') as HTMLElement;
   
-  const savedHeader = dialog.querySelector('#music-saved-header') as HTMLElement;
-  const clearPlaylistBtn = dialog.querySelector('#music-clear-playlist') as HTMLButtonElement;
-  const playPlaylistBtn = dialog.querySelector('#music-play-playlist') as HTMLButtonElement;
-  const savedList = dialog.querySelector('#music-saved-results') as HTMLElement;
+  // -- DOM Elements (Playlist Panel) --
+  const playlistCloseBtn = playlistDialog.querySelector('#music-playlist-close') as HTMLButtonElement;
+  const savedHeader = playlistDialog.querySelector('#music-saved-header') as HTMLElement;
+  const clearPlaylistBtn = playlistDialog.querySelector('#music-clear-playlist') as HTMLButtonElement;
+  const playPlaylistBtn = playlistDialog.querySelector('#music-play-playlist') as HTMLButtonElement;
+  const savedList = playlistDialog.querySelector('#music-saved-results') as HTMLElement;
   
-  const pinnedSong = dialog.querySelector('#music-pinned-song') as HTMLElement;
+  const pinnedSong = playlistDialog.querySelector('#music-pinned-song') as HTMLElement;
 
   // -- Common UI Updaters --
   const updatePillUI = (playing: boolean, titleText: string, channelText: string) => {
@@ -915,6 +938,7 @@ export function renderMusicPlayer(): HTMLElement {
     
     li.addEventListener('click', () => {
       dialog.close();
+      playlistDialog.close();
       playYouTube(res);
       fullPlayerDialog.showModal();
     });
@@ -947,7 +971,7 @@ export function renderMusicPlayer(): HTMLElement {
 
   playPlaylistBtn.addEventListener('click', () => {
     if (savedSongs.length > 0) {
-      dialog.close();
+      playlistDialog.close();
       playYouTube(savedSongs[0]);
       fullPlayerDialog.showModal();
     }
@@ -1090,6 +1114,19 @@ export function renderMusicPlayer(): HTMLElement {
     stateContainer.style.display = 'none';
     resultsList.innerHTML = '';
     searchInput.focus();
+  });
+
+  // ==========================================
+  // Playlist Panel Logic
+  // ==========================================
+  playlistCloseBtn.addEventListener('click', () => {
+    playlistDialog.close();
+  });
+  
+  playlistDialog.addEventListener('click', (e) => {
+    if (e.target === playlistDialog) {
+      playlistDialog.close();
+    }
   });
 
   // ==========================================
