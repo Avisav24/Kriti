@@ -74,9 +74,6 @@ export function renderMusicPlayer(): HTMLElement {
       <button class="music-mini-btn" id="music-mini-heart" aria-label="Add to playlist" title="Save to Playlist">
         ${iconHeart()}
       </button>
-      <button class="music-mini-btn" id="music-playlist-open" aria-label="Playlist" title="Playlist">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15V6"/><path d="M18.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/><path d="M12 12H3"/><path d="M16 6H3"/><path d="M12 18H3"/></svg>
-      </button>
       <button class="music-mini-btn" id="music-search-open" aria-label="Search" title="Search">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
       </button>
@@ -96,6 +93,9 @@ export function renderMusicPlayer(): HTMLElement {
         <input type="text" id="music-search-input" placeholder="Search for a song..." autocomplete="off">
         <button class="music-search-clear" id="music-search-clear" aria-label="Clear search" style="display: none;">
           Clear
+        </button>
+        <button class="music-nav-playlist-btn" id="music-nav-playlist" aria-label="Playlist" title="Playlist">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15V6"/><path d="M18.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/><path d="M12 12H3"/><path d="M16 6H3"/><path d="M12 18H3"/></svg>
         </button>
       </div>
       <button class="music-panel-close" id="music-panel-close" aria-label="Close panel">
@@ -289,6 +289,7 @@ export function renderMusicPlayer(): HTMLElement {
   const closeBtn = dialog.querySelector('#music-panel-close') as HTMLButtonElement;
   const searchInput = dialog.querySelector('#music-search-input') as HTMLInputElement;
   const searchClearBtn = dialog.querySelector('#music-search-clear') as HTMLButtonElement;
+  const navPlaylistBtn = dialog.querySelector('#music-nav-playlist') as HTMLButtonElement;
   const resultsList = dialog.querySelector('#music-search-results') as HTMLElement;
   const stateContainer = dialog.querySelector('#music-search-state') as HTMLElement;
   
@@ -782,7 +783,7 @@ export function renderMusicPlayer(): HTMLElement {
   
   fPlaylistBtn.addEventListener('click', () => {
     fullPlayerDialog.close();
-    dialog.showModal();
+    playlistDialog.showModal();
     loadYouTubeApi();
     renderPinnedSong();
     renderSavedSongs();
@@ -790,7 +791,17 @@ export function renderMusicPlayer(): HTMLElement {
 
   // Global Event from Navbar
   document.addEventListener('koko:open-playlist', () => {
-    dialog.showModal();
+    playlistDialog.showModal();
+    loadYouTubeApi();
+    renderPinnedSong();
+    renderSavedSongs();
+  });
+  
+  // Open Playlist from Search Panel
+  navPlaylistBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dialog.close();
+    playlistDialog.showModal();
     loadYouTubeApi();
     renderPinnedSong();
     renderSavedSongs();
