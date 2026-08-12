@@ -149,7 +149,7 @@ export function renderMusicPlayer(): HTMLElement {
     </div>
     
     <div class="music-full-info">
-      <div style="overflow:hidden; white-space:nowrap; width:100%; margin-bottom:4px;">
+      <div class="music-full-title-wrapper">
         <h2 class="music-full-title ticker-shimmer-text-dark" id="music-full-title">Kalyani (Remix)</h2>
       </div>
       <p class="music-full-channel" id="music-full-channel">Local Audio</p>

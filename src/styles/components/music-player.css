@@ -417,6 +417,15 @@
   z-index: 2;
 }
 
+.music-full-title-wrapper {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  margin-bottom: 4px;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 16px, black calc(100% - 16px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, black 16px, black calc(100% - 16px), transparent 100%);
+}
+
 .music-full-title {
   font-family: var(--font-heading);
   font-size: 1.5rem;
