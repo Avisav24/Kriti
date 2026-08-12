@@ -74,12 +74,16 @@ export default async function handler(req: Request): Promise<Response> {
       });
     }
 
-    const rawKeys = process.env.YOUTUBE_API_KEY || 'AIzaSyCm2iSUl5CjlXre1elwOGrv5txg9JrQ7bw, AIzaSyAqc8ZreavJR4lFYj78IC7DWWFjjL4bEeQ, AIzaSyA1JYRfM-dk3PkQRcF6fCMYLC6GRyer_qc, AIzaSyBn4XQT9UC9WlJyXbh79ZE_tJnfcd2fMrc, AIzaSyC1bWR0LNh_HOqaLnLRwt-IXjHvs-iEtNg, AIzaSyA7VYGvHIGeBJpS49U3qpSbkwfBdyNYrmE, AIzaSyA4TlXgFsqIduWRc5xpArzKb0Q-r7IMGDE, AIzaSyBago5TOpGaIaQx6lgTsC85JPzl3QxeQZI, AIzaSyD6ov0Xhj_ocNejmLLFCBGp-bcKY_vetgU, AIzaSyChtLyKy4_wfGgMOcw_s_870vU56qqE2qM, AIzaSyAt4JojPcw7bOo1o3j9xJ6KfK0f9U9HT9U, AIzaSyAoM51RtPYkwjBG4r_LXYtloMX2eykl5BQ';
-    // Allow comma-separated keys in env, or just hardcode them in this array
-    const YOUTUBE_API_KEYS = rawKeys.split(',').map(k => k.trim()).filter(Boolean);
-
-    // You can also manually add more keys to this array like:
-    // YOUTUBE_API_KEYS.push('YOUR_KEY_2', 'YOUR_KEY_3');
+    const envKeys = process.env.YOUTUBE_API_KEY || '';
+    const hardcodedKeys = 'AIzaSyCm2iSUl5CjlXre1elwOGrv5txg9JrQ7bw, AIzaSyAqc8ZreavJR4lFYj78IC7DWWFjjL4bEeQ, AIzaSyA1JYRfM-dk3PkQRcF6fCMYLC6GRyer_qc, AIzaSyBn4XQT9UC9WlJyXbh79ZE_tJnfcd2fMrc, AIzaSyC1bWR0LNh_HOqaLnLRwt-IXjHvs-iEtNg, AIzaSyA7VYGvHIGeBJpS49U3qpSbkwfBdyNYrmE, AIzaSyA4TlXgFsqIduWRc5xpArzKb0Q-r7IMGDE, AIzaSyBago5TOpGaIaQx6lgTsC85JPzl3QxeQZI, AIzaSyD6ov0Xhj_ocNejmLLFCBGp-bcKY_vetgU, AIzaSyChtLyKy4_wfGgMOcw_s_870vU56qqE2qM, AIzaSyAt4JojPcw7bOo1o3j9xJ6KfK0f9U9HT9U, AIzaSyAoM51RtPYkwjBG4r_LXYtloMX2eykl5BQ';
+    
+    // Combine keys from env and hardcoded, then deduplicate
+    const allKeys = [
+      ...envKeys.split(','),
+      ...hardcodedKeys.split(',')
+    ].map(k => k.trim()).filter(Boolean);
+    
+    const YOUTUBE_API_KEYS = Array.from(new Set(allKeys));
 
     if (YOUTUBE_API_KEYS.length === 0) {
       console.error('YOUTUBE_API_KEY is missing');
