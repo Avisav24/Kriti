@@ -373,8 +373,9 @@
   transform: translate(-50%, -50%);
   text-align: center;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 6px;
 }
 
 .music-full-header-label {
