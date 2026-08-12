@@ -813,6 +813,7 @@ export function renderMusicPlayer(): HTMLElement {
     fCd.style.opacity = '0';
     fCd.style.pointerEvents = 'none';
     fVideoWrapper.style.opacity = '1';
+    fullPlayerDialog.classList.add('video-mode-active');
   });
 
   fViewToggleCdBtn.addEventListener('click', () => {
@@ -824,6 +825,7 @@ export function renderMusicPlayer(): HTMLElement {
     fCd.style.opacity = '1';
     fCd.style.pointerEvents = 'auto';
     fVideoWrapper.style.opacity = '0';
+    fullPlayerDialog.classList.remove('video-mode-active');
   });
 
   fPlaylistBtn.addEventListener('click', () => {
