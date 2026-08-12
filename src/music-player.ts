@@ -59,7 +59,7 @@ export function renderMusicPlayer(): HTMLElement {
     </div>
 
     <div class="music-mini-controls">
-      <button class="music-mini-btn active" id="music-loop-toggle" aria-label="Toggle loop" title="Loop">
+      <button class="music-mini-btn" id="music-loop-toggle" aria-label="Toggle loop" title="Loop">
         ${iconRepeat()}
       </button>
       <button class="music-mini-btn" id="music-prev" aria-label="Previous" title="Previous">
@@ -164,7 +164,7 @@ export function renderMusicPlayer(): HTMLElement {
         </div>
       </div>
       <div class="music-full-controls">
-        <button class="music-full-ctrl-btn active" id="music-full-loop" aria-label="Toggle loop" title="Loop">
+        <button class="music-full-ctrl-btn" id="music-full-loop" aria-label="Toggle loop" title="Loop">
           ${iconRepeat()}
         </button>
         <button class="music-full-ctrl-btn" id="music-full-prev" aria-label="Previous" title="Previous">
@@ -194,7 +194,7 @@ export function renderMusicPlayer(): HTMLElement {
   // -- State --
   let currentEngine: PlayerEngine = 'local';
   let isPlaying = false;
-  let isLooping = true;
+  let isLooping = false;
   let isScrubbing = false;
   let currentYtVideoId: string | null = null;
   let currentYtTitle: string | null = null;
