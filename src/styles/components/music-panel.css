@@ -251,11 +251,11 @@
 .music-panel-pinned-subtitle {
   font-family: var(--font-body);
   font-size: 0.8125rem;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--body-text);
 }
 
 .music-panel-pinned-action {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--ink);
   font-size: 0.8125rem;
   font-weight: 500;
 }
@@ -328,7 +328,7 @@
   background: none;
   border: none;
   padding: 8px;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--body-text);
   cursor: pointer;
   display: flex;
   align-items: center;
