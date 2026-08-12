@@ -138,9 +138,23 @@ export default async function handler(req: Request): Promise<Response> {
       console.error(`YouTube API error with key ${i + 1}:`, errorData);
       
       if (ytResponse.status === 403 && errorData.error?.errors?.[0]?.reason === 'quotaExceeded') {
-        'Cache-Control': 'public, max-age=21600'
-      },
-    });
+        isQuotaExceeded = true;
+        console.warn(`Key ${i + 1} quota exceeded. Trying next...`);
+        continue;
+      }
+      
+      lastError = errorData.error?.message || `HTTP ${ytResponse.status}`;
+    }
+
+    return new Response(
+      JSON.stringify({ error: isQuotaExceeded ? 'All API keys exhausted their quota.' : lastError }),
+      { 
+        status: 503, 
+        headers: { 
+          'Content-Type': 'application/json'
+        } 
+      }
+    );
 
   } catch (err) {
     console.error('YouTube search proxy error:', err);
