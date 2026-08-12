@@ -199,6 +199,8 @@ export function renderMusicPlayer(): HTMLElement {
   let currentYtVideoId: string | null = null;
   let currentYtTitle: string | null = null;
   let currentYtChannelTitle: string | null = null;
+  let currentYtThumbnailUrl: string | null = null;
+  let playHistory: YouTubeSearchResult[] = [];
   let savedSongs: YouTubeSearchResult[] = JSON.parse(localStorage.getItem(SAVED_KEY) || '[]');
   let defaultSong: YouTubeSearchResult | null = JSON.parse(localStorage.getItem('koko-default-song') || 'null');
 
@@ -285,6 +287,26 @@ export function renderMusicPlayer(): HTMLElement {
       toggleBtn.innerHTML = iconPlay();
       fToggleBtn.innerHTML = iconPlay();
     }
+  };
+
+  const HEART_EMPTY_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
+  const HEART_FILLED_SVG = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
+
+  const updateHeartUI = () => {
+    const isSaved = currentEngine === 'youtube' && currentYtVideoId 
+      ? savedSongs.some(s => s.videoId === currentYtVideoId)
+      : false;
+      
+    const heartIcon = isSaved ? HEART_FILLED_SVG : HEART_EMPTY_SVG;
+    if (isSaved) {
+      fHeartBtn.classList.add('active');
+      miniHeartBtn.classList.add('active');
+    } else {
+      fHeartBtn.classList.remove('active');
+      miniHeartBtn.classList.remove('active');
+    }
+    fHeartBtn.innerHTML = heartIcon;
+    miniHeartBtn.innerHTML = heartIcon;
   };
 
   const updateNowPlayingMeta = (title: string, channel: string, thumbUrl: string) => {
@@ -393,6 +415,7 @@ export function renderMusicPlayer(): HTMLElement {
     currentEngine = 'local';
     const a = initAudio();
     updateNowPlayingMeta('Kalyani (Remix)', 'Local Audio', '');
+    updateHeartUI();
     a.play().catch(e => console.error('Audio playback blocked:', e));
   };
 
@@ -476,8 +499,14 @@ export function renderMusicPlayer(): HTMLElement {
     currentYtVideoId = song.videoId;
     currentYtTitle = song.title;
     currentYtChannelTitle = song.channelTitle;
+    currentYtThumbnailUrl = song.thumbnailUrl;
+    
+    if (playHistory.length === 0 || playHistory[playHistory.length - 1].videoId !== song.videoId) {
+      playHistory.push(song);
+    }
     
     updateNowPlayingMeta(song.title, song.channelTitle, song.thumbnailUrl);
+    updateHeartUI();
     
     if (isYtReady && ytPlayer) {
       ytPlayer.loadVideoById(song.videoId);
@@ -560,6 +589,24 @@ export function renderMusicPlayer(): HTMLElement {
   };
 
   const playPrev = () => {
+    if (currentEngine === 'youtube' && isYtReady && ytPlayer && ytPlayer.getCurrentTime() > 3) {
+      ytPlayer.seekTo(0, true);
+      return;
+    }
+    if (currentEngine === 'local' && audio && audio.currentTime > 3) {
+      audio.currentTime = 0;
+      return;
+    }
+    
+    if (playHistory.length > 1) {
+      playHistory.pop(); // remove current song
+      const prevSong = playHistory.pop();
+      if (prevSong) {
+        playYouTube(prevSong);
+      }
+      return;
+    }
+
     if (savedSongs.length === 0) return;
     if (currentEngine === 'local') {
       playYouTube(savedSongs[savedSongs.length - 1]);
@@ -613,17 +660,45 @@ export function renderMusicPlayer(): HTMLElement {
   loopBtn.addEventListener('click', handleLoop);
   fLoopBtn.addEventListener('click', handleLoop);
 
-  fHeartBtn.addEventListener('click', (e) => {
+  const handlePlayerHeartClick = (e: Event) => {
     e.stopPropagation();
-    fHeartBtn.classList.toggle('active');
-    if (fHeartBtn.classList.contains('active')) {
-      fHeartBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
-      showTooltip("Added to playlist");
-    } else {
-      fHeartBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
-      showTooltip("Removed from playlist");
+    if (currentEngine !== 'youtube' || !currentYtVideoId) {
+      showTooltip("Only YouTube songs can be saved");
+      return;
     }
-  });
+    
+    const index = savedSongs.findIndex(s => s.videoId === currentYtVideoId);
+    if (index >= 0) {
+      savedSongs.splice(index, 1);
+      showTooltip("Removed from playlist");
+    } else {
+      savedSongs.push({
+        videoId: currentYtVideoId,
+        title: currentYtTitle || 'Unknown Title',
+        channelTitle: currentYtChannelTitle || 'Unknown Channel',
+        thumbnailUrl: currentYtThumbnailUrl || ''
+      });
+      showTooltip("Added to playlist");
+    }
+    localStorage.setItem(SAVED_KEY, JSON.stringify(savedSongs));
+    renderSavedSongs();
+    updateHeartUI();
+    
+    if (currentYtVideoId) {
+      const searchBtns = document.querySelectorAll(`.music-result-save[data-id="${currentYtVideoId}"]`);
+      searchBtns.forEach(el => {
+        if (index >= 0) {
+          el.classList.remove('saved');
+          el.innerHTML = iconHeart();
+        } else {
+          el.classList.add('saved');
+          el.innerHTML = iconHeartFill();
+        }
+      });
+    }
+  };
+
+  fHeartBtn.addEventListener('click', handlePlayerHeartClick);
 
   // Search Open (Mini Player)
   searchOpenBtn.addEventListener('click', (e) => {
@@ -646,15 +721,7 @@ export function renderMusicPlayer(): HTMLElement {
   }
 
   // Mini Player Clicks
-  miniHeartBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    miniHeartBtn.classList.toggle('active');
-    if (miniHeartBtn.classList.contains('active')) {
-      miniHeartBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
-    } else {
-      miniHeartBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
-    }
-  });
+  miniHeartBtn.addEventListener('click', handlePlayerHeartClick);
 
   miniTopArea.addEventListener('click', () => {fullPlayerDialog.showModal()});
 
@@ -859,16 +926,11 @@ export function renderMusicPlayer(): HTMLElement {
 
   clearPlaylistBtn.addEventListener('click', () => {
     savedSongs = [];
-    localStorage.removeItem('koko-saved-songs');
+    localStorage.setItem('koko-saved-songs', JSON.stringify([]));
     renderSavedSongs();
     
     // Disable the heart buttons if active
-    const fHeartBtn = fullPlayerDialog.querySelector('#music-full-heart') as HTMLButtonElement;
-    const miniHeartBtn = player.querySelector('#music-mini-heart') as HTMLButtonElement;
-    fHeartBtn.classList.remove('active');
-    fHeartBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
-    miniHeartBtn.classList.remove('active');
-    miniHeartBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
+    updateHeartUI();
   });
 
   // ==========================================
