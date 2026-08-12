@@ -21,6 +21,51 @@ const CACHE_TTL = 6 * 60 * 60 * 1000; // 6 hours
 const requestCounts = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT = 20; // max requests per minute
 
+async function scrapeYouTubeSearch(query: string): Promise<YouTubeSearchResult[]> {
+  const res = await fetch(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+  });
+  if (!res.ok) throw new Error('Scrape failed');
+  const html = await res.text();
+  const match = html.match(/var ytInitialData = (\{.*?\});<\/script>/);
+  if (!match) throw new Error('Could not find ytInitialData');
+  const data = JSON.parse(match[1]);
+  
+  const results: YouTubeSearchResult[] = [];
+  try {
+    const contents = data.contents.twoColumnSearchResultsRenderer.primaryContents.sectionListRenderer.contents[0].itemSectionRenderer.contents;
+    for (const item of contents) {
+      if (item.videoRenderer) {
+        const vid = item.videoRenderer;
+        results.push({
+          videoId: vid.videoId,
+          title: vid.title.runs[0].text,
+          channelTitle: vid.ownerText?.runs[0]?.text || '',
+          thumbnailUrl: vid.thumbnail.thumbnails[0].url
+        });
+        if (results.length >= 5) break;
+      }
+    }
+  } catch(e) {
+    console.error('Error parsing ytInitialData:', e);
+  }
+  return results;
+}
+
+async function scrapeYouTubeVideo(videoId: string): Promise<YouTubeSearchResult[]> {
+  const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`);
+  if (!res.ok) throw new Error('oEmbed fetch failed');
+  const data = await res.json();
+  return [{
+    videoId,
+    title: data.title,
+    channelTitle: data.author_name,
+    thumbnailUrl: data.thumbnail_url
+  }];
+}
+
 export default async function handler(req: Request): Promise<Response> {
   if (req.method !== 'GET') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), {
@@ -44,7 +89,6 @@ export default async function handler(req: Request): Promise<Response> {
     const cacheKey = (videoIdParam && videoIdParam.trim().length > 0) ? `id_${videoIdParam.trim()}` : query!.trim().toLowerCase();
 
     // Rate Limiting (Simple)
-    // We use a single bucket for the app since it's a single-user private app
     const clientIp = req.headers.get('x-forwarded-for') || 'default';
     const now = Date.now();
     let rateData = requestCounts.get(clientIp);
@@ -86,86 +130,99 @@ export default async function handler(req: Request): Promise<Response> {
     
     const YOUTUBE_API_KEYS = Array.from(new Set(allKeys));
 
-    if (YOUTUBE_API_KEYS.length === 0) {
-      console.error('YOUTUBE_API_KEY is missing');
-      return new Response(
-        JSON.stringify({ error: 'YouTube search is not configured.' }),
-        { status: 503, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Try keys sequentially until one works
+    let results: YouTubeSearchResult[] | null = null;
     let lastError = 'All API keys exhausted or failed.';
     let isQuotaExceeded = false;
 
-    for (let i = 0; i < YOUTUBE_API_KEYS.length; i++) {
-      const currentKey = YOUTUBE_API_KEYS[i];
-      
-      let ytUrl: URL;
-      if (videoIdParam && videoIdParam.trim().length > 0) {
-        ytUrl = new URL('https://youtube.googleapis.com/youtube/v3/videos');
-        ytUrl.searchParams.set('part', 'id,snippet');
-        ytUrl.searchParams.set('id', videoIdParam.trim());
-        ytUrl.searchParams.set('fields', 'items(id,snippet(title,channelTitle,thumbnails/medium/url,thumbnails/default/url))');
-        ytUrl.searchParams.set('key', currentKey);
-      } else {
-        ytUrl = new URL('https://youtube.googleapis.com/youtube/v3/search');
-        ytUrl.searchParams.set('part', 'snippet');
-        ytUrl.searchParams.set('type', 'video');
-        ytUrl.searchParams.set('videoEmbeddable', 'true');
-        ytUrl.searchParams.set('maxResults', '5');
-        ytUrl.searchParams.set('q', query!.trim());
-        ytUrl.searchParams.set('fields', 'items(id/videoId,snippet(title,channelTitle,thumbnails/medium/url,thumbnails/default/url))');
-        ytUrl.searchParams.set('key', currentKey);
-      }
-
-      const ytResponse = await fetch(ytUrl.toString());
-
-      if (ytResponse.ok) {
-        const ytData = await ytResponse.json();
+    // Try official API keys first
+    if (YOUTUBE_API_KEYS.length > 0) {
+      for (let i = 0; i < YOUTUBE_API_KEYS.length; i++) {
+        const currentKey = YOUTUBE_API_KEYS[i];
         
-        const results: YouTubeSearchResult[] = (ytData.items || []).map((item: any) => ({
-          videoId: (videoIdParam && videoIdParam.trim().length > 0) ? item.id : item.id.videoId,
-          title: item.snippet.title,
-          channelTitle: item.snippet.channelTitle,
-          thumbnailUrl: item.snippet.thumbnails?.medium?.url || item.snippet.thumbnails?.default?.url,
-        }));
-
-        cache.set(cacheKey, { data: results, timestamp: now });
-
-        // Ensure cache doesn't grow unbounded in memory
-        if (cache.size > 100) {
-          const oldestKey = cache.keys().next().value;
-          if (oldestKey) cache.delete(oldestKey);
+        let ytUrl: URL;
+        if (videoIdParam && videoIdParam.trim().length > 0) {
+          ytUrl = new URL('https://youtube.googleapis.com/youtube/v3/videos');
+          ytUrl.searchParams.set('part', 'id,snippet');
+          ytUrl.searchParams.set('id', videoIdParam.trim());
+          ytUrl.searchParams.set('fields', 'items(id,snippet(title,channelTitle,thumbnails/medium/url,thumbnails/default/url))');
+          ytUrl.searchParams.set('key', currentKey);
+        } else {
+          ytUrl = new URL('https://youtube.googleapis.com/youtube/v3/search');
+          ytUrl.searchParams.set('part', 'snippet');
+          ytUrl.searchParams.set('type', 'video');
+          ytUrl.searchParams.set('videoEmbeddable', 'true');
+          ytUrl.searchParams.set('maxResults', '5');
+          ytUrl.searchParams.set('q', query!.trim());
+          ytUrl.searchParams.set('fields', 'items(id/videoId,snippet(title,channelTitle,thumbnails/medium/url,thumbnails/default/url))');
+          ytUrl.searchParams.set('key', currentKey);
         }
 
-        return new Response(JSON.stringify(results), {
-          status: 200,
-          headers: {
-            'Content-Type': 'application/json',
-            'Cache-Control': 'public, max-age=21600'
-          },
-        });
-      }
+        const ytResponse = await fetch(ytUrl.toString());
 
-      // If it failed, log it and move to the next key
-      const errorData = await ytResponse.json().catch(() => ({}));
-      console.error(`YouTube API error with key ${i + 1}:`, errorData);
-      
-      const isQuota = ytResponse.status === 429 || 
-                      (ytResponse.status === 403 && (errorData.error?.errors?.[0]?.reason === 'quotaExceeded' || errorData.error?.errors?.[0]?.reason === 'rateLimitExceeded'));
-                      
-      if (isQuota) {
-        isQuotaExceeded = true;
-        console.warn(`Key ${i + 1} quota exceeded. Trying next...`);
-        continue;
+        if (ytResponse.ok) {
+          const ytData = await ytResponse.json();
+          
+          results = (ytData.items || []).map((item: any) => ({
+            videoId: (videoIdParam && videoIdParam.trim().length > 0) ? item.id : item.id.videoId,
+            title: item.snippet.title,
+            channelTitle: item.snippet.channelTitle,
+            thumbnailUrl: item.snippet.thumbnails?.medium?.url || item.snippet.thumbnails?.default?.url,
+          }));
+          break; // Found successful results, exit key loop
+        }
+
+        // If it failed, log it and move to the next key
+        const errorData = await ytResponse.json().catch(() => ({}));
+        console.error(`YouTube API error with key ${i + 1}:`, errorData);
+        
+        const isQuota = ytResponse.status === 429 || 
+                        (ytResponse.status === 403 && (errorData.error?.errors?.[0]?.reason === 'quotaExceeded' || errorData.error?.errors?.[0]?.reason === 'rateLimitExceeded'));
+                        
+        if (isQuota) {
+          isQuotaExceeded = true;
+          console.warn(`Key ${i + 1} quota exceeded. Trying next...`);
+          continue;
+        }
+        
+        lastError = errorData.error?.message || `HTTP ${ytResponse.status}`;
       }
-      
-      lastError = errorData.error?.message || `HTTP ${ytResponse.status}`;
     }
 
+    // Fallback to web scraping if API failed or no keys available
+    if (!results) {
+      console.log('API keys failed or exhausted, falling back to web scraping...');
+      try {
+        if (videoIdParam && videoIdParam.trim().length > 0) {
+          results = await scrapeYouTubeVideo(videoIdParam.trim());
+        } else {
+          results = await scrapeYouTubeSearch(query!.trim());
+        }
+      } catch (scrapeErr) {
+        console.error('Web scraping fallback failed:', scrapeErr);
+      }
+    }
+
+    if (results) {
+      cache.set(cacheKey, { data: results, timestamp: now });
+
+      // Ensure cache doesn't grow unbounded in memory
+      if (cache.size > 100) {
+        const oldestKey = cache.keys().next().value;
+        if (oldestKey) cache.delete(oldestKey);
+      }
+
+      return new Response(JSON.stringify(results), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'public, max-age=21600'
+        },
+      });
+    }
+
+    // If both API and scraping failed
     return new Response(
-      JSON.stringify({ error: isQuotaExceeded ? 'All API keys exhausted their quota.' : lastError }),
+      JSON.stringify({ error: isQuotaExceeded ? 'All API keys exhausted their quota and fallback failed.' : lastError }),
       { 
         status: 503, 
         headers: { 
