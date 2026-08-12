@@ -484,14 +484,5 @@
   border-top: 1px solid var(--border);
 }
 
-/* Iframe container (hidden) */
-#youtube-player-container {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
-  z-index: -1;
-}
 
 
