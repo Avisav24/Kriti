@@ -18,6 +18,7 @@
 @import './components/love-reasons.css';
 @import './components/footer.css';
 @import './components/music-player.css';
+@import './components/music-panel.css';
 @import './components/pwa-prompt.css';
 
 /* ---- Reset ---- */

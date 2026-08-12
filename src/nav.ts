@@ -12,6 +12,7 @@ const NAV_ITEMS = [
  { label: 'Need Me', href: '#need-me' },
  { label: 'Journal', href: '#journal' },
  { label: 'Love', href: '#love-reasons' },
+ { label: 'Playlist', href: '#playlist' },
 ];
 
 export function renderNav(): HTMLElement {
@@ -114,6 +115,12 @@ export function renderNav(): HTMLElement {
  link.addEventListener('click', (e) => {
  e.preventDefault();
  const href = (link as HTMLAnchorElement).getAttribute('href');
+
+ if (href === '#playlist') {
+   document.dispatchEvent(new CustomEvent('koko:open-playlist'));
+   return;
+ }
+
  if (href) {
  const target = document.querySelector(href);
  if (target) {

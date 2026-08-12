@@ -78,6 +78,13 @@ export function initPwaPrompt(): void {
       sessionStorage.setItem('koko-pwa-dismissed', 'true');
       removePrompt(prompt);
     });
+
+    // Automatically vanish after 3 seconds
+    setTimeout(() => {
+      if (document.getElementById('pwa-prompt')) {
+        removePrompt(prompt);
+      }
+    }, 3000);
   }
 
   function removePrompt(el: HTMLElement) {

@@ -4,21 +4,20 @@
 
 .pwa-prompt {
  position: fixed;
- bottom: var(--space-xl);
- left: 50%;
- transform: translateX(-50%);
- z-index: 160;
+ top: var(--space-xl);
+ left: var(--space-xl);
+ z-index: 99999;
  display: flex;
  align-items: center;
  justify-content: space-between;
- width: calc(100% - var(--space-xl) * 2);
+ width: auto;
  max-width: 400px;
  padding: var(--space-sm) var(--space-md);
  background: var(--structural-white);
  border: 1px solid var(--border);
  border-radius: var(--radius-full); /* Make it a pill */
  box-shadow: var(--shadow-xl);
- animation: fadeRise 0.6s ease-out;
+ animation: fadeIn 0.6s ease-out;
 }
 
 .pwa-prompt-content {
@@ -85,6 +84,9 @@
 /* Adjust position to not overlap music player on very small screens */
 @media (max-width: 768px) {
  .pwa-prompt {
-   bottom: calc(var(--space-md) + 64px); /* Float above the music pill */
+   top: var(--space-md);
+   left: var(--space-md);
+   right: var(--space-md);
+   width: auto;
  }
 }
