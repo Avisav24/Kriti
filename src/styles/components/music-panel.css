@@ -350,10 +350,16 @@
   border-top: 1px solid rgba(231, 228, 225, 0.4);
 }
 
+.music-playlist-actions {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: calc(var(--space-md) - var(--space-xs));
+}
+
+.music-play-playlist-btn,
 .music-clear-playlist-btn {
   background: none;
   border: none;
-  color: var(--accent-pink);
   font-size: 0.75rem;
   font-family: var(--font-body);
   font-weight: 600;
@@ -361,9 +367,17 @@
   letter-spacing: 0.05em;
   cursor: pointer;
   padding: 0;
-  margin-top: calc(var(--space-md) - var(--space-xs));
 }
 
+.music-play-playlist-btn {
+  color: var(--ink);
+}
+
+.music-clear-playlist-btn {
+  color: var(--accent-pink);
+}
+
+.music-play-playlist-btn:hover,
 .music-clear-playlist-btn:hover {
   text-decoration: underline;
 }

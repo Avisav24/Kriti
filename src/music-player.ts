@@ -105,9 +105,12 @@ export function renderMusicPlayer(): HTMLElement {
       </div>
       
       <div class="music-saved-header-wrapper" id="music-saved-header" style="display: none;">
-      <h3 class="music-panel-section-header">Your Saved Tracks</h3>
-      <button class="music-clear-playlist-btn" id="music-clear-playlist">Clear PlayList</button>
-    </div>
+        <h3 class="music-panel-section-header">Your Saved Tracks</h3>
+        <div class="music-playlist-actions">
+          <button class="music-play-playlist-btn" id="music-play-playlist">Play Playlist</button>
+          <button class="music-clear-playlist-btn" id="music-clear-playlist">Clear</button>
+        </div>
+      </div>
       <ul class="music-panel-results" id="music-saved-results"></ul>
       
       <div id="music-search-state" class="music-panel-state" style="display: none;"></div>
@@ -270,6 +273,7 @@ export function renderMusicPlayer(): HTMLElement {
   
   const savedHeader = dialog.querySelector('#music-saved-header') as HTMLElement;
   const clearPlaylistBtn = dialog.querySelector('#music-clear-playlist') as HTMLButtonElement;
+  const playPlaylistBtn = dialog.querySelector('#music-play-playlist') as HTMLButtonElement;
   const savedList = dialog.querySelector('#music-saved-results') as HTMLElement;
   
   const pinnedSong = dialog.querySelector('#music-pinned-song') as HTMLElement;
@@ -939,6 +943,14 @@ export function renderMusicPlayer(): HTMLElement {
     resultsList.innerHTML = '';
     stateContainer.style.display = 'none';
     searchInput.focus();
+  });
+
+  playPlaylistBtn.addEventListener('click', () => {
+    if (savedSongs.length > 0) {
+      dialog.close();
+      playYouTube(savedSongs[0]);
+      fullPlayerDialog.showModal();
+    }
   });
 
   clearPlaylistBtn.addEventListener('click', () => {
