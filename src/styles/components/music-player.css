@@ -287,7 +287,9 @@
   margin: 0;
   padding: 0;
   border: none;
-  background: #111;
+  background: rgba(17, 17, 17, 0.6);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
   color: #fff;
   z-index: 10000;
   display: flex;

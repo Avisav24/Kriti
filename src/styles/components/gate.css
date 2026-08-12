@@ -18,6 +18,7 @@
  max-width: 420px;
  padding: var(--space-3xl) var(--space-2xl);
  text-align: center;
+ border-radius: var(--radius-xl, 24px);
 }
 
 .gate-heart {
@@ -48,8 +49,13 @@
  font-family: var(--font-body);
  font-size: 1rem;
  color: var(--ink);
- background: var(--structural-white);
- border: 1px solid var(--border);
+ background: var(--glass-bg);
+ backdrop-filter: var(--glass-blur);
+ -webkit-backdrop-filter: var(--glass-blur);
+ border: var(--glass-border);
+ border-top: var(--glass-border-highlight);
+ border-left: var(--glass-border-highlight);
+ box-shadow: var(--glass-shadow);
  border-radius: var(--radius-md);
  outline: none;
  transition: border-color var(--transition-fast);

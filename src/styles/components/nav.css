@@ -30,14 +30,15 @@
 }
 
 .nav.scrolled::before {
- background: rgba(250, 250, 248, 0.85);
- backdrop-filter: blur(12px);
- -webkit-backdrop-filter: blur(12px);
+ background: var(--glass-bg);
+ backdrop-filter: var(--glass-blur);
+ -webkit-backdrop-filter: var(--glass-blur);
+ border-bottom: var(--glass-border-highlight);
 }
 
 .nav.scrolled {
- border-bottom-color: var(--border);
- box-shadow: var(--shadow-sm);
+ border-bottom-color: transparent;
+ box-shadow: var(--glass-shadow);
 }
 
 /* Brand / logo */

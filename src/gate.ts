@@ -26,7 +26,7 @@ export function renderGate(onSuccess: () => void): HTMLElement {
  const expectedHash = import.meta.env.VITE_ACCESS_PASSPHRASE_HASH || '';
 
  gate.innerHTML = `
- <div class="gate-card">
+ <div class="gate-card liquid-glass">
  <span class="gate-heart"></span>
  <h1 class="gate-title">This place is just for you</h1>
  <p class="gate-subtitle">Answer the question only you'd know the answer to.</p>

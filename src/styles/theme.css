@@ -56,6 +56,24 @@
  --shadow-md: 0 4px 12px rgba(23, 20, 18, 0.06);
  --shadow-lg: 0 8px 24px rgba(23, 20, 18, 0.08);
  --shadow-xl: 0 16px 48px rgba(23, 20, 18, 0.1);
+
+ /* Liquid Glass Styles */
+ --glass-bg: linear-gradient(135deg, color-mix(in srgb, var(--surface) 80%, transparent) 0%, color-mix(in srgb, var(--surface) 40%, transparent) 100%);
+ --glass-border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+ --glass-border-highlight: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+ --glass-blur: blur(24px);
+ --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* Liquid Glass Utility Class */
+.liquid-glass {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border: var(--glass-border) !important;
+  border-top: var(--glass-border-highlight) !important;
+  border-left: var(--glass-border-highlight) !important;
+  box-shadow: var(--glass-shadow) !important;
 }
 
 
@@ -202,12 +220,14 @@
 
 /* ---- Shared Component Tokens ---- */
 .surface-card {
-  background: rgba(250, 250, 248, 0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(231, 228, 225, 0.6);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-top: var(--glass-border-highlight);
+  border-left: var(--glass-border-highlight);
   border-radius: var(--radius-lg);
-  box-shadow: 0 8px 32px 0 rgba(23, 20, 18, 0.05);
+  box-shadow: var(--glass-shadow);
 }
 
  .btn-primary {
