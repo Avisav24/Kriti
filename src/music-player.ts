@@ -147,6 +147,11 @@ export function renderMusicPlayer(): HTMLElement {
   fullPlayerDialog.id = 'music-full-player';
   
   fullPlayerDialog.innerHTML = `
+    <div id="music-full-video-wrapper" class="music-full-video-bg" style="display: none;">
+      <div id="youtube-player-container"></div>
+      <div class="music-full-video-overlay"></div>
+    </div>
+
     <div class="music-full-header">
       <button class="music-full-btn" id="music-full-close" aria-label="Close full player">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
@@ -175,9 +180,6 @@ export function renderMusicPlayer(): HTMLElement {
     <div class="music-full-art-section">
       <div class="music-full-cd" aria-label="CD Art">
         <img class="music-full-cd-art" id="music-full-art" src="" alt="">
-      </div>
-      <div id="music-full-video-wrapper" style="display: none; width: 100%; max-width: 480px; aspect-ratio: 16/9; border-radius: 16px; overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1);">
-        <div id="youtube-player-container"></div>
       </div>
     </div>
     
@@ -808,17 +810,9 @@ export function renderMusicPlayer(): HTMLElement {
     fViewToggleVideoBtn.classList.add('active');
     fViewToggleCdBtn.classList.remove('active');
     
-    fCd.style.display = 'none';
+    fCd.style.opacity = '0';
+    fCd.style.pointerEvents = 'none';
     fVideoWrapper.style.display = 'block';
-    const ytContainer = document.getElementById('youtube-player-container');
-    if (ytContainer) {
-      ytContainer.style.position = 'relative';
-      ytContainer.style.width = '100%';
-      ytContainer.style.height = '100%';
-      ytContainer.style.opacity = '1';
-      ytContainer.style.pointerEvents = 'none'; // Unclickable so it feels embedded
-      ytContainer.style.zIndex = '10';
-    }
   });
 
   fViewToggleCdBtn.addEventListener('click', () => {
@@ -827,17 +821,9 @@ export function renderMusicPlayer(): HTMLElement {
     fViewToggleCdBtn.classList.add('active');
     fViewToggleVideoBtn.classList.remove('active');
     
-    fCd.style.display = 'flex';
+    fCd.style.opacity = '1';
+    fCd.style.pointerEvents = 'auto';
     fVideoWrapper.style.display = 'none';
-    const ytContainer = document.getElementById('youtube-player-container');
-    if (ytContainer) {
-      ytContainer.style.position = 'absolute';
-      ytContainer.style.width = '1px';
-      ytContainer.style.height = '1px';
-      ytContainer.style.opacity = '0';
-      ytContainer.style.pointerEvents = 'none';
-      ytContainer.style.zIndex = '-1';
-    }
   });
 
   fPlaylistBtn.addEventListener('click', () => {
