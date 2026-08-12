@@ -7,10 +7,14 @@
   bottom: var(--space-xl);
   right: var(--space-xl);
   width: 340px;
-  background: var(--structural-white);
-  border: 1px solid var(--border);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--structural-white) 80%, transparent) 0%, color-mix(in srgb, var(--structural-white) 40%, transparent) 100%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   padding: var(--space-md);
   z-index: 150;
   display: flex;
