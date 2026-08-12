@@ -147,7 +147,7 @@ export function renderMusicPlayer(): HTMLElement {
   fullPlayerDialog.id = 'music-full-player';
   
   fullPlayerDialog.innerHTML = `
-    <div id="music-full-video-wrapper" class="music-full-video-bg" style="opacity: 0; pointer-events: none; transition: opacity 0.4s ease;">
+    <div id="music-full-video-wrapper" class="music-full-video-bg">
       <div id="youtube-player-container"></div>
       <div class="music-full-video-overlay"></div>
     </div>
@@ -819,9 +819,6 @@ export function renderMusicPlayer(): HTMLElement {
     fViewToggleVideoBtn.classList.add('active');
     fViewToggleCdBtn.classList.remove('active');
     
-    fCd.style.opacity = '0';
-    fCd.style.pointerEvents = 'none';
-    fVideoWrapper.style.opacity = '1';
     fullPlayerDialog.classList.add('video-mode-active');
   });
 
@@ -831,9 +828,6 @@ export function renderMusicPlayer(): HTMLElement {
     fViewToggleCdBtn.classList.add('active');
     fViewToggleVideoBtn.classList.remove('active');
     
-    fCd.style.opacity = '1';
-    fCd.style.pointerEvents = 'auto';
-    fVideoWrapper.style.opacity = '0';
     fullPlayerDialog.classList.remove('video-mode-active');
   });
 
