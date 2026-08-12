@@ -551,6 +551,11 @@ export function renderMusicPlayer(): HTMLElement {
     if (currentEngine === 'local') {
       if (savedSongs.length > 0) {
         playYouTube(savedSongs[0]);
+      } else if (defaultSong) {
+        playYouTube(defaultSong);
+      } else if (audio) {
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
       }
       return;
     }
@@ -588,6 +593,14 @@ export function renderMusicPlayer(): HTMLElement {
     // Fallback to saved songs loop if recommendation fails or is empty
     if (savedSongs.length > 0) {
       playYouTube(savedSongs[0]);
+    } else if (defaultSong && defaultSong.videoId !== currentYtVideoId) {
+      playYouTube(defaultSong);
+    } else {
+      // Replay current song if nothing else is available
+      if (ytPlayer && isYtReady) {
+        ytPlayer.seekTo(0);
+        ytPlayer.playVideo();
+      }
     }
   };
 
