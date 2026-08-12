@@ -97,6 +97,13 @@
   color: #fff;
 }
 
+.music-full-player.video-mode-active .ticker-shimmer-text-dark {
+  animation: marquee 25s linear infinite;
+  background: none;
+  -webkit-text-fill-color: #fff;
+  color: #fff;
+}
+
 @keyframes shimmer {
   to {
     background-position: 200% center;
