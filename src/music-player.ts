@@ -696,9 +696,7 @@ export function renderMusicPlayer(): HTMLElement {
   fToggleBtn.addEventListener('click', handleToggle);
   
   fArtSection.addEventListener('click', (e: Event) => {
-    if (isVideoView) {
-      handleToggle(e);
-    }
+    handleToggle(e);
   });
 
   const handlePrev = (e: Event) => {

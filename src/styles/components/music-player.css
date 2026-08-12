@@ -523,7 +523,6 @@
 .music-full-player.video-mode-active .music-full-art-section {
   opacity: 0;
   transform: scale(0.9) translateY(20px);
-  pointer-events: none;
 }
 
 .music-full-player.playing .music-full-cd {
