@@ -578,7 +578,7 @@
 
 .music-full-player.video-mode-active .music-full-header-label,
 .music-full-player.video-mode-active .music-full-header-title {
-  opacity: 0.2;
+  opacity: 0.15;
 }
 
 .music-full-player.video-mode-active .music-full-btn {
