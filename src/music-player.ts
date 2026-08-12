@@ -490,6 +490,9 @@ export function renderMusicPlayer(): HTMLElement {
           disablekb: 1,
           fs: 0,
           rel: 0,
+          cc_load_policy: 0,
+          iv_load_policy: 3,
+          modestbranding: 1,
         },
         events: {
           onReady: () => {
