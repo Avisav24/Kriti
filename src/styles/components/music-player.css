@@ -690,6 +690,13 @@
   overflow: hidden;
   pointer-events: none;
   z-index: 1;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+}
+
+.music-full-player.video-mode-active .music-full-light-leaks {
+  display: none !important;
+  opacity: 0 !important;
 }
 
 .music-full-light-leaks::after {
