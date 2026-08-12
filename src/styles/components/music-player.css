@@ -578,11 +578,11 @@
 
 .music-full-player.video-mode-active .music-full-header-label,
 .music-full-player.video-mode-active .music-full-header-title {
-  opacity: 0.7;
+  opacity: 0.2;
 }
 
 .music-full-player.video-mode-active .music-full-btn {
-  opacity: 0.15;
+  opacity: 0.2;
 }
 
 .music-full-player.video-mode-active .music-full-btn:hover {
@@ -592,11 +592,11 @@
 .music-full-player.video-mode-active .music-full-title,
 .music-full-player.video-mode-active .music-full-channel,
 .music-full-player.video-mode-active .music-full-time {
-  opacity: 0.15;
+  opacity: 0.3;
 }
 
 .music-full-player.video-mode-active .music-full-ctrl-btn {
-  opacity: 0.15 !important;
+  opacity: 0.3 !important;
 }
 
 .music-full-player.video-mode-active .music-full-ctrl-btn:hover {
@@ -604,7 +604,7 @@
 }
 
 .music-full-player.video-mode-active .music-view-toggle {
-  opacity: 0.15;
+  opacity: 0.3;
   transition: opacity 0.2s;
 }
 
